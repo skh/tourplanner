@@ -7,7 +7,7 @@ var ViewModel = function () {
 	this.init = function () {
 		// if there is localStorage, read data from that
 		// if not, set up with hard-coded data
-		console.log("I am alive and trapped in a piece of JavaScript code!");
+		this.city = ko.observable("Nuremberg");
 	};
 
 	this.init();
