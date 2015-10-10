@@ -1,0 +1,3 @@
+var config = {
+	maps-api.key: "your-google-maps-api-key" 
+}
