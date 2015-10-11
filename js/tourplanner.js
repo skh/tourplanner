@@ -10,24 +10,19 @@ var Map = function () {
 		});
 	};
 	$.getScript("https://maps.googleapis.com/maps/api/js?key="
-		+ config.maps_api_key, (function () {
-			console.log(this);
-			this.init();
-		}).bind(this));
+		+ config.maps_api_key + "&callback=map.init");
 };
 
 // Main data will be directly kept in the ViewModel object
-var ViewModel = function () {
+var ViewModel = function (map) {
+	this.map = map
 	this.init = function () {
 		// if there is localStorage, read data from that
 		// if not, set up with hard-coded data
 		this.city = ko.observable("Nuremberg");
-		this.map = new Map();
-
-
 	};
 
 	this.init();
 }
-
-ko.applyBindings (new ViewModel());
+var map = new Map();
+ko.applyBindings (new ViewModel(map));
