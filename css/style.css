@@ -2,3 +2,13 @@ html, body { height: 100%; margin: 0; padding: 0; }
 #map {
 	height: 100%;
 }
+
+#panel {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	height: 100px;
+	width: 20%;
+	z-index: 99;
+	background-color: white;
+}
