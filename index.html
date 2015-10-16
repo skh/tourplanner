@@ -10,8 +10,8 @@
   <div id="map"></div>
   <div id="panel">
     <label>City
-      <input type="text" id="city">
-      <button type="submit">Search</button>
+      <input type="text" id="city" data-bind="value: city">
+      <button type="submit" data-bind="click: showCity">Show</button>
     </label>
   </div>
   <input>

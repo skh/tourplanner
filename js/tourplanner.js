@@ -3,14 +3,21 @@
 var Place = function () {};
 
 var Map = function () {
+	this.zoomLevel = 14;
 	this.init = function () {
-		this.geocoder = new google.maps.Geocoder();
 		this.map = new google.maps.Map(document.getElementById('map'), {
 			center: {lat: -34.397, lng: 150.644},
-			zoom: 8
+			zoom: this.zoomLevel
 		});
-		this.geocoder.geocode( { 'address': 'Nuernberg'}, (function(results, status) {
-			console.log (this);
+		this.geocoder = new google.maps.Geocoder();
+		this.showCity("Nuremberg");
+	};
+
+	$.getScript("https://maps.googleapis.com/maps/api/js?key="
+		+ config.maps_api_key + "&callback=map.init");
+
+	this.showCity = function (city, zoomLevel) {
+		this.geocoder.geocode( { 'address': city}, (function(results, status) {
 			if (status == google.maps.GeocoderStatus.OK) {
 				this.map.setCenter(results[0].geometry.location);
 				var marker = new google.maps.Marker({
@@ -22,8 +29,8 @@ var Map = function () {
 			}
 		}).bind(this));
 	};
-	$.getScript("https://maps.googleapis.com/maps/api/js?key="
-		+ config.maps_api_key + "&callback=map.init");
+
+
 };
 
 // Main data will be directly kept in the ViewModel object
@@ -33,6 +40,9 @@ var ViewModel = function (map) {
 		// if there is localStorage, read data from that
 		// if not, set up with hard-coded data
 		this.city = ko.observable("Nuremberg");
+	};
+	this.showCity = function () {
+		this.map.showCity(this.city());
 	};
 
 	this.init();
