@@ -1,3 +1,5 @@
 var config = {
-	maps-api.key: "your-google-maps-api-key" 
+	maps-api.key: "your-google-maps-api-key",
+	foursquare_client_id: "your-foursquare-client-id",
+	foursquare_client_secret: "your-foursquare-client-secret"
 }
