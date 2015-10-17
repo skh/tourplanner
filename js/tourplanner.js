@@ -9,7 +9,7 @@ var Map = function () {
 	this.zoomLevel = 15;
 	this.init = function () {
 		this.map = new google.maps.Map(document.getElementById('map'), {
-			center: {lat: -34.397, lng: 150.644},
+			center: {lat: 49.45314515020171, lng: 11.081171035766602},
 			zoom: this.zoomLevel,
 			mapTypeControl: false,
 			streetViewControl: false,
@@ -26,7 +26,7 @@ var Map = function () {
 
 		
 		this.geocoder = new google.maps.Geocoder();
-		this.showCity("Nuremberg");
+		//this.showCity("Nuremberg");
 	};
 
 	$.getScript("https://maps.googleapis.com/maps/api/js?key="
