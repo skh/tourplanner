@@ -1,10 +1,4 @@
-// a place is anything that is returned by Yelp 
-// and will be displayed on the map
-
-
-
-var Place = function () {};
-
+// Google Maps object and helper functions
 var Map = function () {
 	this.zoomLevel = 15;
 	this.init = function () {
@@ -45,24 +39,46 @@ var Map = function () {
 			}
 		}).bind(this));
 	};
-
-
 };
+
+var Foursquare = function () {
+	this.loadPlaces = function (places, query) {
+		console.log(config);
+		var explore_url = "https://api.foursquare.com/v2/venues/search";
+		explore_url += "?client_id=" + config.foursquare_client_id;
+		explore_url += "&client_secret=" + config.foursquare_client_secret;
+		explore_url += "&v=20151017"
+		explore_url += "&ll=49.45314515020171,11.081171035766602";
+		explore_url += "&radius=1000";
+		explore_url += "&limit=50"
+		explore_url += "&query=" + query;
+
+		$.getJSON(explore_url, function (data) {
+			var venues = data.response.venues;
+			venues.forEach(function (venue) {
+				console.log(venue.name);
+			});
+		});
+	};
+};
+
+var Place = function () {};
 
 // Main data will be directly kept in the ViewModel object
 var ViewModel = function (map) {
-	this.map = map
+	this.map = map;
 	this.init = function () {
-		// if there is localStorage, read data from that
-		// if not, set up with hard-coded data
-		this.city = ko.observable("Nuremberg");
+		this.places = ko.observableArray();
+		this.foursquare = new Foursquare();
 	};
 	this.showCity = function () {
 		this.map.showCity(this.city());
+	};
+	this.loadPlaces = function () {
+		this.foursquare.loadPlaces(this.places, "museum")
 	};
 
 	this.init();
 }
 var map = new Map();
 ko.applyBindings (new ViewModel(map));
-console.log(sights);
