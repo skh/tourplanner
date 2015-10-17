@@ -1,14 +1,30 @@
 // a place is anything that is returned by Yelp 
 // and will be displayed on the map
+
+
+
 var Place = function () {};
 
 var Map = function () {
-	this.zoomLevel = 14;
+	this.zoomLevel = 15;
 	this.init = function () {
 		this.map = new google.maps.Map(document.getElementById('map'), {
 			center: {lat: -34.397, lng: 150.644},
-			zoom: this.zoomLevel
+			zoom: this.zoomLevel,
+			mapTypeControl: false,
+			streetViewControl: false,
+			mapTypeId: google.maps.MapTypeId.ROADMAP,
+			styles: [
+				{
+    			featureType: "transit",
+    			stylers: [{ visibility: "off" }]   
+  			}, {
+  				featureType: "poi",
+  				stylers: [{visibility: "off"}]
+  			}]
 		});
+
+		
 		this.geocoder = new google.maps.Geocoder();
 		this.showCity("Nuremberg");
 	};
@@ -20,10 +36,10 @@ var Map = function () {
 		this.geocoder.geocode( { 'address': city}, (function(results, status) {
 			if (status == google.maps.GeocoderStatus.OK) {
 				this.map.setCenter(results[0].geometry.location);
-				var marker = new google.maps.Marker({
+				/*var marker = new google.maps.Marker({
 					map: this.map,
 					position: results[0].geometry.location
-				});
+				});*/
 			} else {
 				alert('Geocode was not successful for the following reason: ' + status);
 			}
@@ -49,3 +65,4 @@ var ViewModel = function (map) {
 }
 var map = new Map();
 ko.applyBindings (new ViewModel(map));
+console.log(sights);
