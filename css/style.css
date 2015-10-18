@@ -25,3 +25,10 @@ html, body { height: 100%; margin: 0; padding: 0; }
 	padding: 5px;
 }
 
+#venue-list {
+	position: absolute;
+	top: 52px;
+	bottom: 10px;
+	overflow-y: scroll;
+}
+

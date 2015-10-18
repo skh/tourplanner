@@ -47,6 +47,7 @@ var GMap = function () {
 		};
 		this.service.textSearch(request, function (data) {
 			data.forEach(function (item) {
+				places.push(new Place(item.name));
 				console.log(item.name);
 			});
 		});
@@ -74,7 +75,9 @@ var Foursquare = function () {
 	};
 };
 
-var Place = function () {};
+var Place = function (name) {
+	this.name = name;
+};
 
 // Main data will be directly kept in the ViewModel object
 var ViewModel = function (gmap) {
@@ -87,11 +90,11 @@ var ViewModel = function (gmap) {
 		this.map.showCity(this.city());
 	};
 	this.loadBookstores = function () {
-		//this.foursquare.loadPlaces(this.places, "museum")
+		this.places.removeAll();
 		this.gmap.nearbySearch(this.places, "bookstore");
 	};
 	this.loadCoffeeshops = function () {
-		//this.foursquare.loadPlaces(this.places, "museum")
+		this.places.removeAll();
 		this.gmap.nearbySearch(this.places, "coffee");
 	};
 
