@@ -1,9 +1,10 @@
 // Google Maps object and helper functions
-var Map = function () {
+var GMap = function () {
 	this.zoomLevel = 15;
 	this.init = function () {
+		this.here = new google.maps.LatLng(49.45314515020171,11.081171035766602);
 		this.map = new google.maps.Map(document.getElementById('map'), {
-			center: {lat: 49.45314515020171, lng: 11.081171035766602},
+			center: this.here,
 			zoom: this.zoomLevel,
 			mapTypeControl: false,
 			streetViewControl: false,
@@ -17,14 +18,12 @@ var Map = function () {
   				stylers: [{visibility: "off"}]
   			}]
 		});
-
-		
+		this.service = new google.maps.places.PlacesService(this.map);
 		this.geocoder = new google.maps.Geocoder();
-		//this.showCity("Nuremberg");
 	};
 
 	$.getScript("https://maps.googleapis.com/maps/api/js?key="
-		+ config.maps_api_key + "&callback=map.init");
+		+ config.maps_api_key + "&callback=gmap.init&libraries=places");
 
 	this.showCity = function (city, zoomLevel) {
 		this.geocoder.geocode( { 'address': city}, (function(results, status) {
@@ -38,6 +37,19 @@ var Map = function () {
 				alert('Geocode was not successful for the following reason: ' + status);
 			}
 		}).bind(this));
+	};
+
+	this.nearbySearch = function (places, query) {
+		var request = {
+			location: this.here,
+			radius: '500',
+			query: query
+		};
+		this.service.textSearch(request, function (data) {
+			data.forEach(function (item) {
+				console.log(item.name);
+			});
+		});
 	};
 };
 
@@ -65,8 +77,8 @@ var Foursquare = function () {
 var Place = function () {};
 
 // Main data will be directly kept in the ViewModel object
-var ViewModel = function (map) {
-	this.map = map;
+var ViewModel = function (gmap) {
+	this.gmap = gmap;
 	this.init = function () {
 		this.places = ko.observableArray();
 		this.foursquare = new Foursquare();
@@ -74,11 +86,16 @@ var ViewModel = function (map) {
 	this.showCity = function () {
 		this.map.showCity(this.city());
 	};
-	this.loadPlaces = function () {
-		this.foursquare.loadPlaces(this.places, "museum")
+	this.loadBookstores = function () {
+		//this.foursquare.loadPlaces(this.places, "museum")
+		this.gmap.nearbySearch(this.places, "bookstore");
+	};
+	this.loadCoffeeshops = function () {
+		//this.foursquare.loadPlaces(this.places, "museum")
+		this.gmap.nearbySearch(this.places, "coffee");
 	};
 
 	this.init();
 }
-var map = new Map();
-ko.applyBindings (new ViewModel(map));
+var gmap = new GMap();
+ko.applyBindings (new ViewModel(gmap));
