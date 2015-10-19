@@ -42,7 +42,7 @@ var GMap = function () {
 	this.nearbySearch = function (places, query) {
 		var request = {
 			location: this.here,
-			radius: '500',
+			radius: '200',
 			query: query
 		};
 		this.service.textSearch(request, function (data) {

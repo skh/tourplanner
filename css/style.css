@@ -27,8 +27,20 @@ html, body { height: 100%; margin: 0; padding: 0; }
 
 #venue-list {
 	position: absolute;
-	top: 52px;
-	bottom: 10px;
-	overflow-y: scroll;
+	top: 48px;
+	bottom: 0px;
+	overflow-y: auto;
+}
+
+#venue-list ul {
+	padding: 0;
+	margin: 0;
+}
+
+#venue-list li {
+	list-style-type: none;
+	font-family: sans-serif;
+	padding: 8px;
+	border-bottom: 1px dotted #cccccc;
 }
 
