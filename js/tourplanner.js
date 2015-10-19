@@ -47,8 +47,10 @@ var GMap = function () {
 		};
 		this.service.textSearch(request, function (data) {
 			data.forEach(function (item) {
-				places.push(new Place(item.name));
-				console.log(item.name);
+				var place = new Place(item.name);
+				place.lat = item.geometry.location.lat();
+				place.lng = item.geometry.location.lng();
+				places.push(place);
 			});
 		});
 	};
@@ -77,6 +79,19 @@ var Foursquare = function () {
 
 var Place = function (name) {
 	this.name = name;
+	this.lat = 0;
+	this.lng = 0;
+
+
+	this.showMarker = function (gmap) {
+		var latLng = new google.maps.LatLng(this.lat, this.lng);
+		this.marker = new google.maps.Marker({
+			position: latLng,
+			title: this.name
+		});
+		this.marker.setMap(gmap.map);
+	};
+	
 };
 
 // Main data will be directly kept in the ViewModel object
@@ -97,6 +112,10 @@ var ViewModel = function (gmap) {
 		this.places.removeAll();
 		this.gmap.nearbySearch(this.places, "coffee");
 	};
+	this.showMarker = (function (item) {
+		console.log(this.gmap);
+		item.showMarker(this.gmap);
+	}).bind(this);
 
 	this.init();
 }
