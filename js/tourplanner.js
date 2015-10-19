@@ -47,9 +47,9 @@ var GMap = function () {
 		};
 		this.service.textSearch(request, function (data) {
 			data.forEach(function (item) {
-				var place = new Place(item.name);
-				place.lat = item.geometry.location.lat();
-				place.lng = item.geometry.location.lng();
+				var place = new Place(item.name, 
+					item.geometry.location.lat(),
+					item.geometry.location.lng());
 				places.push(place);
 			});
 		});
@@ -77,21 +77,25 @@ var Foursquare = function () {
 	};
 };
 
-var Place = function (name) {
+var Place = function (name, lat, lng) {
 	this.name = name;
-	this.lat = 0;
-	this.lng = 0;
-
-
-	this.showMarker = function (gmap) {
-		var latLng = new google.maps.LatLng(this.lat, this.lng);
-		this.marker = new google.maps.Marker({
-			position: latLng,
+	this.lat = lat;
+	this.lng = lng;
+	this.marker = new google.maps.Marker({
+			position: new google.maps.LatLng(this.lat, this.lng),
 			title: this.name
 		});
-		this.marker.setMap(gmap.map);
+	this.markerVisible = false;
+
+	this.toggleMarker = function (gmap) {
+		this.markerVisible = !this.markerVisible;
+		if (this.markerVisible == true) {
+			this.marker.setMap(gmap.map);
+		} else {
+			this.marker.setMap(null);
+		}
+		
 	};
-	
 };
 
 // Main data will be directly kept in the ViewModel object
@@ -112,9 +116,8 @@ var ViewModel = function (gmap) {
 		this.places.removeAll();
 		this.gmap.nearbySearch(this.places, "coffee");
 	};
-	this.showMarker = (function (item) {
-		console.log(this.gmap);
-		item.showMarker(this.gmap);
+	this.toggleMarker = (function (item) {
+		item.toggleMarker(this.gmap);
 	}).bind(this);
 
 	this.init();
