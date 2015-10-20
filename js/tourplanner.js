@@ -45,14 +45,15 @@ var GMap = function () {
 			radius: '200',
 			query: query
 		};
-		this.service.textSearch(request, function (data) {
-			data.forEach(function (item) {
+		this.service.textSearch(request, (function (data) {
+			data.forEach((function (item) {
 				var place = new Place(item.name, 
 					item.geometry.location.lat(),
 					item.geometry.location.lng());
 				places.push(place);
-			});
-		});
+				place.toggleMarker(this);
+			}).bind(this));
+		}).bind(this));
 	};
 };
 
@@ -111,10 +112,16 @@ var ViewModel = function (gmap) {
 	this.loadBookstores = function () {
 		this.places.removeAll();
 		this.gmap.nearbySearch(this.places, "bookstore");
+		this.showAllMarkers();
 	};
 	this.loadCoffeeshops = function () {
 		this.places.removeAll();
 		this.gmap.nearbySearch(this.places, "coffee");
+	};
+	this.showAllMarkers = function () {
+		ko.utils.arrayForEach(this.places(), function (item) {
+			console.log(item.name);
+		});
 	};
 	this.toggleMarker = (function (item) {
 		item.toggleMarker(this.gmap);
