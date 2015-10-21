@@ -1,5 +1,5 @@
 // Google Maps object and helper functions
-var GMap = function () {
+var GAPI = function () {
 	this.zoomLevel = 15;
 	this.init = function () {
 		this.here = new google.maps.LatLng(49.45314515020171,11.081171035766602);
@@ -23,7 +23,7 @@ var GMap = function () {
 	};
 
 	$.getScript("https://maps.googleapis.com/maps/api/js?key="
-		+ config.maps_api_key + "&callback=gmap.init&libraries=places");
+		+ config.maps_api_key + "&callback=gapi.init&libraries=places");
 
 	this.showCity = function (city, zoomLevel) {
 		this.geocoder.geocode( { 'address': city}, (function(results, status) {
@@ -42,14 +42,15 @@ var GMap = function () {
 	this.nearbySearch = function (places, query) {
 		var request = {
 			location: this.here,
-			radius: '200',
-			query: query
+			radius: '1000',
+			keyword: query
 		};
-		this.service.textSearch(request, (function (data) {
+		this.service.nearbySearch(request, (function (data) {
 			data.forEach((function (item) {
 				var place = new Place(item.name, 
 					item.geometry.location.lat(),
-					item.geometry.location.lng());
+					item.geometry.location.lng(),
+					item.place_id);
 				places.push(place);
 				place.toggleMarker(this);
 			}).bind(this));
@@ -78,20 +79,28 @@ var Foursquare = function () {
 	};
 };
 
-var Place = function (name, lat, lng) {
+var Place = function (name, lat, lng, placeId) {
 	this.name = name;
 	this.lat = lat;
 	this.lng = lng;
+	this.placeId = placeId;
+	this.website = "";
+	
 	this.marker = new google.maps.Marker({
-			position: new google.maps.LatLng(this.lat, this.lng),
-			title: this.name
-		});
+		position: new google.maps.LatLng(this.lat, this.lng),
+		title: this.name
+	});
+
+	this.infowindow = new google.maps.InfoWindow({
+    content: ""
+  });
+
 	this.markerVisible = false;
 
-	this.toggleMarker = function (gmap) {
+	this.toggleMarker = function (gapi) {
 		this.markerVisible = !this.markerVisible;
 		if (this.markerVisible == true) {
-			this.marker.setMap(gmap.map);
+			this.marker.setMap(gapi.map);
 		} else {
 			this.marker.setMap(null);
 		}		
@@ -102,12 +111,28 @@ var Place = function (name, lat, lng) {
 		} else {
 			this.marker.setAnimation(google.maps.Animation.BOUNCE);
 		}
-	}
+	};
+
+	this.getDetails = function (gapi) {
+		console.log("x");
+		var request = {
+				placeId: this.placeId
+		};
+		gapi.service.getDetails(request, (function (result, status) {
+			if (status == google.maps.places.PlacesServiceStatus.OK) {
+				this.infowindow.setContent("<a href=\"" + result.website + "\">Website</a>");
+			}
+		}).bind(this));
+	};
+
+	this.showInfoWindow = function (gapi) {
+		this.infowindow.open(gapi.map, this.marker);
+	};
 };
 
 // Main data will be directly kept in the ViewModel object
-var ViewModel = function (gmap) {
-	this.gmap = gmap;
+var ViewModel = function (gapi) {
+	this.gapi = gapi;
 
 	this.init = function () {
 		this.places = ko.observableArray();
@@ -120,13 +145,13 @@ var ViewModel = function (gmap) {
 
 	this.loadBookstores = function () {
 		this.places.removeAll();
-		this.gmap.nearbySearch(this.places, "bookstore");
+		this.gapi.nearbySearch(this.places, "bookstore");
 		this.showAllMarkers();
 	};
 
 	this.loadCoffeeshops = function () {
 		this.places.removeAll();
-		this.gmap.nearbySearch(this.places, "coffee");
+		this.gapi.nearbySearch(this.places, "coffee");
 	};
 
 	this.showAllMarkers = function () {
@@ -136,14 +161,20 @@ var ViewModel = function (gmap) {
 	};
 
 	this.toggleMarker = (function (item) {
-		item.toggleMarker(this.gmap);
+		item.toggleMarker(this.gapi);
 	}).bind(this);
 
 	this.toggleAnimateMarker = (function (item) {
 		item.toggleAnimateMarker();
 	}).bind(this);
 
+	this.onClickHandler = (function (item) {
+		item.toggleAnimateMarker();
+		item.getDetails(this.gapi);
+		item.showInfoWindow(this.gapi);
+	}).bind(this);
+
 	this.init();
 }
-var gmap = new GMap();
-ko.applyBindings (new ViewModel(gmap));
+var gapi = new GAPI();
+ko.applyBindings (new ViewModel(gapi));

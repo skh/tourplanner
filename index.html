@@ -17,7 +17,7 @@
       <!-- ko if: places -->
       <div id="venue-list">
         <ul data-bind="foreach: places">
-          <li data-bind="text: name, click: $root.toggleAnimateMarker"></li>
+          <li data-bind="text: name, click: $root.onClickHandler"></li>
         </ul>
       </div>
       <!-- /ko -->
