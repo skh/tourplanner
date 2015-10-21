@@ -99,7 +99,8 @@ var Place = function (name, lat, lng, placeId) {
 		};
 		gapi.service.getDetails(request, (function (result, status) {
 			if (status == google.maps.places.PlacesServiceStatus.OK) {
-				this.infowindow.setContent("<a href=\"" + result.website + "\">Website</a>");
+				this.website = result.website;
+				this.infowindow.setContent(this._getContentString());
 			}
 		}).bind(this));
 	};
@@ -107,7 +108,13 @@ var Place = function (name, lat, lng, placeId) {
 	this.showInfoWindow = function (gapi) {
 		this.infowindow.open(gapi.map, this.marker);
 	};
+
+	this._getContentString = function () {
+		var content = "<a href=\"" + this.website + "\">"+ this.name + "</a>";
+		return content;
+	};
 };
+
 
 // Main data will be directly kept in the ViewModel object
 var ViewModel = function (gapi) {
@@ -155,4 +162,4 @@ var ViewModel = function (gapi) {
 	this.init();
 }
 var gapi = new GAPI();
-ko.applyBindings (new ViewModel(gapi));/
+ko.applyBindings (new ViewModel(gapi));
