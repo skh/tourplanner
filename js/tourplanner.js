@@ -94,37 +94,53 @@ var Place = function (name, lat, lng) {
 			this.marker.setMap(gmap.map);
 		} else {
 			this.marker.setMap(null);
-		}
-		
+		}		
 	};
+	this.toggleAnimateMarker = function () {
+		if (this.marker.getAnimation() != null) {
+			this.marker.setAnimation(null);
+		} else {
+			this.marker.setAnimation(google.maps.Animation.BOUNCE);
+		}
+	}
 };
 
 // Main data will be directly kept in the ViewModel object
 var ViewModel = function (gmap) {
 	this.gmap = gmap;
+
 	this.init = function () {
 		this.places = ko.observableArray();
 		this.foursquare = new Foursquare();
 	};
+
 	this.showCity = function () {
 		this.map.showCity(this.city());
 	};
+
 	this.loadBookstores = function () {
 		this.places.removeAll();
 		this.gmap.nearbySearch(this.places, "bookstore");
 		this.showAllMarkers();
 	};
+
 	this.loadCoffeeshops = function () {
 		this.places.removeAll();
 		this.gmap.nearbySearch(this.places, "coffee");
 	};
+
 	this.showAllMarkers = function () {
 		ko.utils.arrayForEach(this.places(), function (item) {
 			console.log(item.name);
 		});
 	};
+
 	this.toggleMarker = (function (item) {
 		item.toggleMarker(this.gmap);
+	}).bind(this);
+
+	this.toggleAnimateMarker = (function (item) {
+		item.toggleAnimateMarker();
 	}).bind(this);
 
 	this.init();
