@@ -58,27 +58,6 @@ var GAPI = function () {
 	};
 };
 
-var Foursquare = function () {
-	this.loadPlaces = function (places, query) {
-		console.log(config);
-		var explore_url = "https://api.foursquare.com/v2/venues/search";
-		explore_url += "?client_id=" + config.foursquare_client_id;
-		explore_url += "&client_secret=" + config.foursquare_client_secret;
-		explore_url += "&v=20151017"
-		explore_url += "&ll=49.45314515020171,11.081171035766602";
-		explore_url += "&radius=1000";
-		explore_url += "&limit=50"
-		explore_url += "&query=" + query;
-
-		$.getJSON(explore_url, function (data) {
-			var venues = data.response.venues;
-			venues.forEach(function (venue) {
-				console.log(venue.name);
-			});
-		});
-	};
-};
-
 var Place = function (name, lat, lng, placeId) {
 	this.name = name;
 	this.lat = lat;
@@ -136,7 +115,6 @@ var ViewModel = function (gapi) {
 
 	this.init = function () {
 		this.places = ko.observableArray();
-		this.foursquare = new Foursquare();
 	};
 
 	this.showCity = function () {
@@ -177,4 +155,4 @@ var ViewModel = function (gapi) {
 	this.init();
 }
 var gapi = new GAPI();
-ko.applyBindings (new ViewModel(gapi));
+ko.applyBindings (new ViewModel(gapi));/
