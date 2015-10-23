@@ -100,6 +100,7 @@ var Place = function (name, lat, lng, placeId) {
 		gapi.service.getDetails(request, (function (result, status) {
 			if (status == google.maps.places.PlacesServiceStatus.OK) {
 				this.website = result.website;
+				this.picture_url = result.photos[0];
 				this.infowindow.setContent(this._getContentString());
 			}
 		}).bind(this));
@@ -129,29 +130,24 @@ var ViewModel = function (gapi) {
 	};
 
 	this.loadBookstores = function () {
+		this.places().forEach(function (place) {
+			place.toggleMarker();
+		});
 		this.places.removeAll();
 		this.gapi.nearbySearch(this.places, "bookstore");
-		this.showAllMarkers();
 	};
 
 	this.loadCoffeeshops = function () {
+
 		this.places.removeAll();
 		this.gapi.nearbySearch(this.places, "coffee");
 	};
 
-	this.showAllMarkers = function () {
-		ko.utils.arrayForEach(this.places(), function (item) {
-			console.log(item.name);
+	this.toggleAllMarkers = function () {
+		this.places().forEach(function (place) {
+			place.toggleMarker();
 		});
 	};
-
-	this.toggleMarker = (function (item) {
-		item.toggleMarker(this.gapi);
-	}).bind(this);
-
-	this.toggleAnimateMarker = (function (item) {
-		item.toggleAnimateMarker();
-	}).bind(this);
 
 	this.onClickHandler = (function (item) {
 		item.toggleAnimateMarker();
