@@ -11,14 +11,14 @@ html, body { height: 100%; margin: 0; padding: 0; }
 #panel {
 	position: absolute;
 	right: 20px;
-	width: 300px;
+	width: 400px;
 	bottom: 120px;
 	top: 40px;
 	z-index: 99;
 	background-color: white;
 	opacity: 0.95;
 	border: 2px solid #cccccc;
-	border-radius: 5px;
+	border-radius: 2px;
 	padding: 5px;
 }
 

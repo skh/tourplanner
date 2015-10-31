@@ -4,14 +4,34 @@
  <meta charset="UTF-8">
  <meta name="viewport" content="width=device-width, initial-scale=1">
  <title>Tour planner</title>
+ <link rel="stylesheet" href="css/foundation.min.css">
  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <div id="map"></div>
   <div id="panel">
-    <label>City
-      <input type="text" id="city" data-bind="value: city">
-      <button type="submit" data-bind="click: showCity">Show</button>
+    <div class="row">
+      <div class="small-12 colums">
+        <ul class="tabs" data-tab role="tablist">
+          <li class="tab-title active" role="presentation"><a href="#panel2-1" role="tab" tabindex="0" aria-selected="true" aria-controls="panel2-1">City</a></li>
+          <li class="tab-title" role="presentation"><a href="#panel2-2" role="tab" tabindex="0" aria-selected="false" aria-controls="panel2-2">Places</a></li>
+          <li class="tab-title" role="presentation"><a href="#panel2-2" role="tab" tabindex="0" aria-selected="false" aria-controls="panel2-2">Bookmarks</a></li>
+        </ul>
+        <div class="tabs-content">
+          <section role="tabpanel" aria-hidden="false" class="content active" id="panel2-1">
+            <label>City
+        <input type="text" id="city" data-bind="value: city"><button class="button tiny" type="submit" data-bind="click: showCity">Show</button>
+          </section>
+          <section role="tabpanel" aria-hidden="true" class="content" id="panel2-2">
+            <h2>Second panel content goes here...</h2>
+          </section>
+          <section role="tabpanel" aria-hidden="true" class="content" id="panel2-2">
+            <h2>Second panel content goes here...</h2>
+          </section>
+        </div>
+      </div>
+    </div>
+
       <button type="submit" data-bind="click: loadBookstores">Load bookstores</button>
       <button type="submit" data-bind="click: loadCoffeeshops">Load coffee shops</button>
       <!-- ko if: places -->
@@ -26,6 +46,7 @@
   <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
   <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js"></script>
+  <script src="js/foundation.min.js"></script>
   <script src="js/config.js"></script>
   <script src="sampledata/sights.json"></script>
   <script src="js/tourplanner.js"></script>
