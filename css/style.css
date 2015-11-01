@@ -11,7 +11,7 @@ html, body { height: 100%; margin: 0; padding: 0; }
 #panel {
 	position: absolute;
 	right: 20px;
-	width: 400px;
+	width: 4	00px;
 	bottom: 120px;
 	top: 40px;
 	z-index: 99;
@@ -24,7 +24,7 @@ html, body { height: 100%; margin: 0; padding: 0; }
 
 #venue-list {
 	position: absolute;
-	top: 48px;
+	top: 110px;
 	bottom: 0px;
 	overflow-y: auto;
 }
