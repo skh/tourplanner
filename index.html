@@ -10,18 +10,32 @@
 <body>
   <div id="map"></div>
   <div id="panel">
-    <label>City</label>
-    <input type="text" id="city" data-bind="value: city">
-    <button type="submit" data-bind="click: showCity">Show</button>
-    <button type="submit" data-bind="click: loadBookstores">Load bookstores</button>
-    <button class="button tiny" type="submit" data-bind="click: loadCoffeeshops">Load coffee shops</button>
-    <!-- ko if: places -->
+    <nav id="panel-nav">
+      <ul>
+        <li><a class="tab" id="city-tab">City</a></li>
+        <li><a class="tab" id="places-tab">Places</a></li>
+        <li><a class="tab" id="bookmarks-tab">Bookmarks</a></li>
+      </ul>
+    </nav>
+    <section id="city">
+      <label>City</label>
+      <input type="text" id="city" data-bind="value: city">
+    </section>
+    <section id="places">
+      <button type="submit" data-bind="click: showCity">Show</button>
+      <button type="submit" data-bind="click: loadBookstores">Load bookstores</button>
+      <button class="button tiny" type="submit" data-bind="click: loadCoffeeshops">Load coffee shops</button>
+      <!-- ko if: places -->
       <div id="venue-list">
         <ul data-bind="foreach: places">
           <li data-bind="text: name, click: $root.onClickHandler"></li>
         </ul>
       </div>
-    <!-- /ko -->
+      <!-- /ko -->
+    </section>
+    <section id="bookmarks">
+      
+    </section>
   </div>
   <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
   <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>

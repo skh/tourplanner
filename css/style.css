@@ -18,8 +18,7 @@ html, body { height: 100%; margin: 0; padding: 0; }
 	background-color: white;
 	opacity: 0.95;
 	border: 2px solid #cccccc;
-	border-radius: 2px;
-	padding: 5px;
+	border-radius: 4px;
 }
 
 #venue-list {
@@ -41,3 +40,16 @@ html, body { height: 100%; margin: 0; padding: 0; }
 	border-bottom: 1px dotted #cccccc;
 }
 
+#panel-nav {
+	border-bottom: 2px solid #cccccc;
+	padding: 10px 20px 0px 20px;	
+}
+
+#panel-nav li {
+	margin-left: -50px;
+	margin-right: 60px;
+	list-style-type: none;
+	display: inline;
+}
+
+#panel-nave
