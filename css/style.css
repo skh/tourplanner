@@ -45,6 +45,10 @@ html, body { height: 100%; margin: 0; padding: 0; }
 	padding: 10px 20px 0px 20px;	
 }
 
+#panel-nav ul {
+	list-style: none;
+}
+
 #panel-nav li {
 	margin-left: -50px;
 	margin-right: 60px;

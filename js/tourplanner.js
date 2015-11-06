@@ -118,15 +118,16 @@ var Place = function (name, lat, lng, placeId) {
 
 
 // Main data will be directly kept in the ViewModel object
-var ViewModel = function (gapi) {
-	this.gapi = gapi;
-
-	this.init = function () {
+var ViewModel = function (gapi, city) {
+	
+	this.init = function (gapi, city) {
+		this.gapi = gapi;
 		this.places = ko.observableArray();
+		this.city = ko.observable(city)
 	};
 
 	this.showCity = function () {
-		this.map.showCity(this.city());
+		this.gapi.showCity(this.city());
 	};
 
 	this.loadBookstores = function () {
@@ -155,7 +156,9 @@ var ViewModel = function (gapi) {
 		item.showInfoWindow(this.gapi);
 	}).bind(this);
 
-	this.init();
+	this.init(gapi, city);
 }
 var gapi = new GAPI();
-ko.applyBindings (new ViewModel(gapi));
+var initialCity = "Nuremberg, Germany";
+var viewModel = new ViewModel(gapi, initialCity);
+ko.applyBindings (viewModel);
