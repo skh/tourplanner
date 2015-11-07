@@ -5,19 +5,20 @@ html, body { height: 100%; margin: 0; padding: 0; }
 	left: 0px;
 	bottom: 0px;
 	min-height: 220px;
-	right: 0px;
+	right: 284px;
 }
 
 #panel {
 	position: absolute;
-	right: 20px;
-	bottom: 120px;
-	top: 40px;
+	right: 0px;
+	bottom: 0px;
+	min-width: 284px;
+	top: 0px;
 	z-index: 99;
 	background-color: white;
 	opacity: 0.95;
-	border: 2px solid #cccccc;
-	border-radius: 4px;
+	border-left: 2px solid #cccccc;
+	padding: 0;
 }
 
 #venue-list {
@@ -44,16 +45,18 @@ html, body { height: 100%; margin: 0; padding: 0; }
 
 #panel-nav {
 	border-bottom: 2px solid #cccccc;
-	padding: 10px 20px 0px 20px;	
+	padding: 10px;
 }
 
 #panel-nav ul {
 	list-style: none;
+	margin: 0;
+	padding: 0;
 }
 
 #panel-nav li {
-	margin-left: -50px;
-	margin-right: 60px;
+	padding: 5px;
+	margin: 5px;
 	list-style-type: none;
 	display: inline;
 }
