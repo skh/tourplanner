@@ -27,6 +27,10 @@ var GAPI = function (city, zoomLevel) {
 	$.getScript("https://maps.googleapis.com/maps/api/js?key="
 		+ config.maps_api_key + "&callback=gapi.init&libraries=places");
 
+	this.setZoom = function (zoom) {
+		this.map.setZoom(zoom);
+	};
+
 	this.showCity = function (city) {
 		this.geocoder.geocode( { 'address': city}, (function(results, status) {
 			if (status == google.maps.GeocoderStatus.OK) {
@@ -158,11 +162,13 @@ var ViewModel = function (gapi) {
 	this.zoomOut = function () {
 		if (this.zoomLevel() > 1) {
 			this.zoomLevel(this.zoomLevel() - 1);
+			this.gapi.setZoom(this.zoomLevel());
 		}
 	};
 
 	this.zoomIn = function () {
 		this.zoomLevel(this.zoomLevel() + 1);
+		this.gapi.setZoom(this.zoomLevel());
 	};
 
 	this.onClickHandler = (function (item) {
