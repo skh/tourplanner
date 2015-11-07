@@ -11,7 +11,6 @@ html, body { height: 100%; margin: 0; padding: 0; }
 #panel {
 	position: absolute;
 	right: 20px;
-	width: 4	00px;
 	bottom: 120px;
 	top: 40px;
 	z-index: 99;
@@ -23,9 +22,11 @@ html, body { height: 100%; margin: 0; padding: 0; }
 
 #venue-list {
 	position: absolute;
-	top: 164px;
+	top: 80px;
 	bottom: 0px;
 	overflow-y: auto;
+	width: 98%;
+	border-top: 2px solid #cccccc;
 }
 
 #venue-list ul {
@@ -57,4 +58,32 @@ html, body { height: 100%; margin: 0; padding: 0; }
 	display: inline;
 }
 
-#panel-nave
+.content-panel {
+	padding: 5px;
+}
+
+#city-panel {
+	display: block;
+}
+
+#places-panel {
+	display: none;
+}
+
+#bookmarks-panel {
+	display: none;
+}
+
+.tab {
+	color: #656565;
+	font-weight: bold;
+}
+
+.tab:hover {
+	color: #000000;
+	text-decoration: none;
+}
+
+.tab.active {
+	color: #000000;
+}

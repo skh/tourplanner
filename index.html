@@ -12,18 +12,17 @@
   <div id="panel">
     <nav id="panel-nav">
       <ul>
-        <li><a class="tab" id="city-tab">City</a></li>
+        <li><a class="tab active" id="city-tab">City</a></li>
         <li><a class="tab" id="places-tab">Places</a></li>
         <li><a class="tab" id="bookmarks-tab">Bookmarks</a></li>
       </ul>
     </nav>
-    <section id="city">
+    <section id="city-panel" class="content-panel">
       <label>City</label>
       <input type="text" id="city" data-bind="value: city">
-    </section>
-    <section id="places">
       <button type="submit" data-bind="click: showCity">Show</button>
-      <hr />
+    </section>
+    <section id="places-panel" class="content-panel">
       <button type="submit" data-bind="click: loadBookstores">Load bookstores</button>
       <button class="button tiny" type="submit" data-bind="click: loadCoffeeshops">Load coffee shops</button>
       <!-- ko if: places -->
@@ -34,16 +33,14 @@
       </div>
       <!-- /ko -->
     </section>
-    <section id="bookmarks">
+    <section id="bookmarks-panel" class="content-panel">
       
     </section>
   </div>
   <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
   <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js"></script>
-  <script src="js/foundation.min.js"></script>
   <script src="js/config.js"></script>
-  <script src="sampledata/sights.json"></script>
   <script src="js/tourplanner.js"></script>
   <script src="js/ui.js"></script>
 </body>	
