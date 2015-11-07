@@ -133,12 +133,15 @@ var ViewModel = function (gapi) {
 		this.places = ko.observableArray();
 		this.city = ko.observable(gapi.city);
 		this.zoomLevel = ko.observable(gapi.zoomLevel);
+		this.initialZoomLevel = this.zoomLevel();
 	};
 
 	this.showCity = function () {
 		this.toggleAllMarkers();
 		this.places.removeAll();
 		this.gapi.showCity(this.city());
+		this.gapi.setZoom(this.initialZoomLevel);
+		this.zoomLevel(this.initialZoomLevel);
 	};
 
 	this.loadBookstores = function () {
@@ -167,8 +170,10 @@ var ViewModel = function (gapi) {
 	};
 
 	this.zoomIn = function () {
-		this.zoomLevel(this.zoomLevel() + 1);
-		this.gapi.setZoom(this.zoomLevel());
+		if (this.zoomLevel() < 21) {
+			this.zoomLevel(this.zoomLevel() + 1);
+			this.gapi.setZoom(this.zoomLevel());
+		}
 	};
 
 	this.onClickHandler = (function (item) {
