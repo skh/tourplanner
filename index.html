@@ -19,9 +19,11 @@
     </nav>
     <section id="city-panel" class="content-panel">
       <label>City:</label><br>
+      <form data-bind="submit: showCity">
       <input type="text" id="city" data-bind="value: city">
       
-      <button type="submit" data-bind="click: showCity">Show</button>
+      <button type="submit">Show</button>
+      </form>
     </section>
     <section id="places-panel" class="content-panel">
       <button type="submit" data-bind="click: loadBookstores">Load bookstores</button>
