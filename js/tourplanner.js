@@ -28,7 +28,8 @@ var GAPI = function () {
 	this.showCity = function (city, zoomLevel) {
 		this.geocoder.geocode( { 'address': city}, (function(results, status) {
 			if (status == google.maps.GeocoderStatus.OK) {
-				this.map.setCenter(results[0].geometry.location);
+				this.here = results[0].geometry.location;
+				this.map.setCenter(this.here);
 				/*var marker = new google.maps.Marker({
 					map: this.map,
 					position: results[0].geometry.location
@@ -127,19 +128,19 @@ var ViewModel = function (gapi, city) {
 	};
 
 	this.showCity = function () {
+		this.toggleAllMarkers();
+		this.places.removeAll();
 		this.gapi.showCity(this.city());
 	};
 
 	this.loadBookstores = function () {
-		this.places().forEach(function (place) {
-			place.toggleMarker();
-		});
+		this.toggleAllMarkers();
 		this.places.removeAll();
 		this.gapi.nearbySearch(this.places, "bookstore");
 	};
 
 	this.loadCoffeeshops = function () {
-
+		this.toggleAllMarkers();
 		this.places.removeAll();
 		this.gapi.nearbySearch(this.places, "coffee");
 	};

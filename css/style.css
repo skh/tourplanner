@@ -23,7 +23,7 @@ html, body { height: 100%; margin: 0; padding: 0; }
 
 #venue-list {
 	position: absolute;
-	top: 110px;
+	top: 164px;
 	bottom: 0px;
 	overflow-y: auto;
 }
@@ -36,7 +36,8 @@ html, body { height: 100%; margin: 0; padding: 0; }
 #venue-list li {
 	list-style-type: none;
 	font-family: sans-serif;
-	padding: 8px;
+	font-size: 0.9em;
+	padding: 4px;
 	border-bottom: 1px dotted #cccccc;
 }
 
