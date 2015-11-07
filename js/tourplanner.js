@@ -1,13 +1,14 @@
 // Google Maps object and helper functions
-var GAPI = function () {
-	this.zoomLevel = 15;
+var GAPI = function (city, zoomLevel) {
+	this.zoomLevel = zoomLevel;
+	this.city = city;
+
 	this.init = function () {
-		this.here = new google.maps.LatLng(49.45314515020171,11.081171035766602);
 		this.map = new google.maps.Map(document.getElementById('map'), {
-			center: this.here,
 			zoom: this.zoomLevel,
 			mapTypeControl: false,
 			streetViewControl: false,
+			zoomControl: false,
 			mapTypeId: google.maps.MapTypeId.ROADMAP,
 			styles: [
 				{
@@ -20,15 +21,17 @@ var GAPI = function () {
 		});
 		this.service = new google.maps.places.PlacesService(this.map);
 		this.geocoder = new google.maps.Geocoder();
+		this.showCity(this.city);
 	};
 
 	$.getScript("https://maps.googleapis.com/maps/api/js?key="
 		+ config.maps_api_key + "&callback=gapi.init&libraries=places");
 
-	this.showCity = function (city, zoomLevel) {
+	this.showCity = function (city) {
 		this.geocoder.geocode( { 'address': city}, (function(results, status) {
 			if (status == google.maps.GeocoderStatus.OK) {
 				this.here = results[0].geometry.location;
+				this.bounds = results[0].geometry.bounds;
 				this.map.setCenter(this.here);
 				/*var marker = new google.maps.Marker({
 					map: this.map,
@@ -119,12 +122,13 @@ var Place = function (name, lat, lng, placeId) {
 
 
 // Main data will be directly kept in the ViewModel object
-var ViewModel = function (gapi, city) {
+var ViewModel = function (gapi) {
 	
-	this.init = function (gapi, city) {
+	this.init = function (gapi) {
 		this.gapi = gapi;
 		this.places = ko.observableArray();
-		this.city = ko.observable(city)
+		this.city = ko.observable(gapi.city);
+		this.map = ko.observable(gapi.map);
 	};
 
 	this.showCity = function () {
@@ -159,7 +163,9 @@ var ViewModel = function (gapi, city) {
 
 	this.init(gapi, city);
 }
-var gapi = new GAPI();
+
 var initialCity = "Nuremberg, Germany";
-var viewModel = new ViewModel(gapi, initialCity);
+var initialZoomLevel = 15;
+var gapi = new GAPI(initialCity, initialZoomLevel);
+var viewModel = new ViewModel(gapi);
 ko.applyBindings (viewModel);
