@@ -90,3 +90,11 @@ html, body { height: 100%; margin: 0; padding: 0; }
 .tab.active {
 	color: #000000;
 }
+
+footer {
+	position: absolute;
+	bottom: 0;
+	padding: 10px;
+	border-top: 2px solid #cccccc;
+	width: 100%;
+}

@@ -128,7 +128,7 @@ var ViewModel = function (gapi) {
 		this.gapi = gapi;
 		this.places = ko.observableArray();
 		this.city = ko.observable(gapi.city);
-		this.map = ko.observable(gapi.map);
+		this.zoomLevel = ko.observable(gapi.zoomLevel);
 	};
 
 	this.showCity = function () {
@@ -153,6 +153,16 @@ var ViewModel = function (gapi) {
 		this.places().forEach(function (place) {
 			place.toggleMarker();
 		});
+	};
+
+	this.zoomOut = function () {
+		if (this.zoomLevel() > 1) {
+			this.zoomLevel(this.zoomLevel() - 1);
+		}
+	};
+
+	this.zoomIn = function () {
+		this.zoomLevel(this.zoomLevel() + 1);
 	};
 
 	this.onClickHandler = (function (item) {
