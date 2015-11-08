@@ -24,6 +24,13 @@
       
       <button type="submit">Show</button>
       </form>
+      <!-- ko if: recentLocations -->
+      <div id="location-list">
+        <ul data-bind="foreach: recentLocations">
+          <li data-bind="text: $data, click.showCity"></li>
+        </ul>
+      </div>
+      <!-- /ko -->
     </section>
     <section id="places-panel" class="content-panel">
       <button type="submit" data-bind="click: loadBookstores">Load bookstores</button>

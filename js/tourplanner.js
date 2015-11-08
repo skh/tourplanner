@@ -132,8 +132,11 @@ var ViewModel = function (gapi) {
 		this.gapi = gapi;
 		this.places = ko.observableArray();
 		this.city = ko.observable(gapi.city);
+		this.previousLocation = null;
 		this.zoomLevel = ko.observable(gapi.zoomLevel);
 		this.initialZoomLevel = this.zoomLevel();
+		this.recentLocations = ko.observableArray();
+		this.recentLocations.push(this.city());
 	};
 
 	this.showCity = function () {
@@ -142,6 +145,9 @@ var ViewModel = function (gapi) {
 		this.gapi.showCity(this.city());
 		this.gapi.setZoom(this.initialZoomLevel);
 		this.zoomLevel(this.initialZoomLevel);
+		if (this.recentLocations().indexOf(this.city()) == -1) {
+			this.recentLocations.push(this.city());
+		}
 	};
 
 	this.loadBookstores = function () {
