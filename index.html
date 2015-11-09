@@ -12,22 +12,22 @@
   <div id="panel">
     <nav id="panel-nav">
       <ul>
-        <li><a class="tab active" id="city-tab">City</a></li>
+        <li><a class="tab active" id="location-tab">Location</a></li>
         <li><a class="tab" id="places-tab">Places</a></li>
         <li><a class="tab" id="bookmarks-tab">Bookmarks</a></li>
       </ul>
     </nav>
-    <section id="city-panel" class="content-panel">
-      <label>City:</label><br>
-      <form data-bind="submit: showCity">
-      <input type="text" id="city" data-bind="value: city">
+    <section id="location-panel" class="content-panel">
+      <label>Location:</label><br>
+      <form data-bind="submit: showLocation">
+      <input type="text" id="location" data-bind="value: location">
       
       <button type="submit">Show</button>
       </form>
       <!-- ko if: recentLocations -->
       <div id="location-list">
         <ul data-bind="foreach: recentLocations">
-          <li data-bind="text: $data, click.showCity"></li>
+          <li data-bind="text: $data"></li>
         </ul>
       </div>
       <!-- /ko -->

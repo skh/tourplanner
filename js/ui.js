@@ -6,7 +6,7 @@ $(function() {
 	// allow the user to drag the panel out of the way
 	$("#panel").draggable();
 
-  var activePanel = $('#city-panel');
+  var activePanel = $('#location-panel');
 
   var enablePanel = function (panel) {
     activePanel.hide();
@@ -19,9 +19,9 @@ $(function() {
     $(el).addClass("active");
   };
 
-  $('#city-tab').click(function (e) {
+  $('#location-tab').click(function (e) {
     enableTab(e.target);
-    enablePanel('#city-panel');
+    enablePanel('#location-panel');
   });
 
   $('#places-tab').click(function (e) {

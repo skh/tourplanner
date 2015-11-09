@@ -1,7 +1,7 @@
 // Google Maps object and helper functions
-var GAPI = function (city, zoomLevel) {
+var GAPI = function (location, zoomLevel) {
 	this.zoomLevel = zoomLevel;
-	this.city = city;
+	this.location = location;
 
 	this.init = function () {
 		this.map = new google.maps.Map(document.getElementById('map'), {
@@ -21,7 +21,7 @@ var GAPI = function (city, zoomLevel) {
 		});
 		this.service = new google.maps.places.PlacesService(this.map);
 		this.geocoder = new google.maps.Geocoder();
-		this.showCity(this.city);
+		this.showLocation(this.location);
 	};
 
 	$.getScript("https://maps.googleapis.com/maps/api/js?key="
@@ -31,8 +31,8 @@ var GAPI = function (city, zoomLevel) {
 		this.map.setZoom(zoom);
 	};
 
-	this.showCity = function (city) {
-		this.geocoder.geocode( { 'address': city}, (function(results, status) {
+	this.showLocation = function (location) {
+		this.geocoder.geocode( { 'address': location}, (function(results, status) {
 			if (status == google.maps.GeocoderStatus.OK) {
 				this.here = results[0].geometry.location;
 				this.bounds = results[0].geometry.bounds;
@@ -131,22 +131,22 @@ var ViewModel = function (gapi) {
 	this.init = function (gapi) {
 		this.gapi = gapi;
 		this.places = ko.observableArray();
-		this.city = ko.observable(gapi.city);
+		this.location = ko.observable(gapi.location);
 		this.previousLocation = null;
 		this.zoomLevel = ko.observable(gapi.zoomLevel);
 		this.initialZoomLevel = this.zoomLevel();
 		this.recentLocations = ko.observableArray();
-		this.recentLocations.push(this.city());
+		this.recentLocations.push(this.location());
 	};
 
-	this.showCity = function () {
+	this.showLocation = function () {
 		this.toggleAllMarkers();
 		this.places.removeAll();
-		this.gapi.showCity(this.city());
+		this.gapi.showLocation(this.location());
 		this.gapi.setZoom(this.initialZoomLevel);
 		this.zoomLevel(this.initialZoomLevel);
-		if (this.recentLocations().indexOf(this.city()) == -1) {
-			this.recentLocations.push(this.city());
+		if (this.recentLocations().indexOf(this.location()) == -1) {
+			this.recentLocations.push(this.location());
 		}
 	};
 
@@ -188,11 +188,11 @@ var ViewModel = function (gapi) {
 		item.showInfoWindow(this.gapi);
 	}).bind(this);
 
-	this.init(gapi, city);
+	this.init(gapi);
 }
 
-var initialCity = "Nuremberg, Germany";
+var initialLocation = "Nuremberg, Germany";
 var initialZoomLevel = 15;
-var gapi = new GAPI(initialCity, initialZoomLevel);
+var gapi = new GAPI(initialLocation, initialZoomLevel);
 var viewModel = new ViewModel(gapi);
 ko.applyBindings (viewModel);
