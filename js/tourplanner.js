@@ -150,6 +150,11 @@ var ViewModel = function (gapi) {
 		}
 	};
 
+	this.selectLocation = (function (data) {
+		this.location(data);
+		this.showLocation();
+	}).bind(this);
+
 	this.loadBookstores = function () {
 		this.toggleAllMarkers();
 		this.places.removeAll();

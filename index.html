@@ -27,7 +27,7 @@
       <!-- ko if: recentLocations -->
       <div id="location-list">
         <ul data-bind="foreach: recentLocations">
-          <li data-bind="text: $data"></li>
+          <li data-bind="text: $data, click: $root.selectLocation"></li>
         </ul>
       </div>
       <!-- /ko -->
