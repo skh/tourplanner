@@ -30,12 +30,12 @@ html, body { height: 100%; margin: 0; padding: 0; }
 	border-top: 2px solid #cccccc;
 }
 
-#venue-list ul {
+#venue-list ul, #location-list ul {
 	padding: 0;
 	margin: 0;
 }
 
-#venue-list li {
+#venue-list li, #location-list li {
 	list-style-type: none;
 	font-family: sans-serif;
 	font-size: 0.9em;
