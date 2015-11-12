@@ -91,6 +91,14 @@ html, body { height: 100%; margin: 0; padding: 0; }
 	color: #000000;
 }
 
+.bookmark {
+	color: #ccc;
+}
+
+.place {
+	margin-left: 5px;
+}
+
 footer {
 	position: absolute;
 	bottom: 0;

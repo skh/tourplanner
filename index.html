@@ -38,7 +38,10 @@
       <!-- ko if: places -->
       <div id="venue-list">
         <ul data-bind="foreach: places">
-          <li data-bind="text: name, click: $root.onClickHandler"></li>
+          <li>
+            <span class="bookmark glyphicon glyphicon-star"></span>
+            <span class="place" data-bind="text: name, click: $root.onClickHandler"></span>
+          </li>
         </ul>
       </div>
       <!-- /ko -->
