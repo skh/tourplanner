@@ -41,24 +41,6 @@ html, body { height: 100%; margin: 0; padding: 0; }
 	border-bottom: 1px dotted #cccccc;
 }
 
-#panel-nav {
-	border-bottom: 2px solid #cccccc;
-	padding: 10px;
-}
-
-#panel-nav ul {
-	list-style: none;
-	margin: 0;
-	padding: 0;
-}
-
-#panel-nav li {
-	padding: 5px;
-	margin: 5px;
-	list-style-type: none;
-	display: inline;
-}
-
 .content-panel {
 	padding: 5px;
 }
