@@ -39,7 +39,7 @@
       <div id="venue-list">
         <ul data-bind="foreach: places">
           <li>
-            <span class="bookmark glyphicon glyphicon-star"></span>
+            <span class="bookmark glyphicon glyphicon-star" data-bind="click: $root.bookmarkPlace"></span>
             <span class="place" data-bind="text: name, click: $root.onClickHandler"></span>
           </li>
         </ul>

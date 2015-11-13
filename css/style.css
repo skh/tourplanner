@@ -95,6 +95,10 @@ html, body { height: 100%; margin: 0; padding: 0; }
 	color: #ccc;
 }
 
+.bookmark:hover {
+	color: #ff9900;
+}
+
 .place {
 	margin-left: 5px;
 }

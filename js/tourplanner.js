@@ -173,6 +173,10 @@ var ViewModel = function (gapi) {
 		});
 	};
 
+	this.bookmarkPlace = (function (data) {
+		console.log(data);
+	}).bind(this);
+
 	this.zoomOut = function () {
 		if (this.zoomLevel() > 1) {
 			this.zoomLevel(this.zoomLevel() - 1);
