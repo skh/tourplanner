@@ -18,11 +18,13 @@
       </ul>
     </nav>
     <section id="location-panel" class="content-panel">
-      <label>Location:</label><br>
       <form data-bind="submit: showLocation">
-      <input type="text" id="location" data-bind="value: location">
-      
-      <button type="submit">Show</button>
+        <div class="form-group">
+          <label>Location:</label>
+          <input type="text" id="location" data-bind="value: location"
+                 class="form-control">
+          </div>
+        <button type="submit" class="btn btn-default">Show</button>
       </form>
       <!-- ko if: recentLocations -->
       <div id="location-list">
@@ -34,13 +36,18 @@
     </section>
     <section id="places-panel" class="content-panel">
       <form data-bind="submit: searchPlaces">
-        <select name="type" data-bind="options: types,
-                                       optionsText: 'name', 
-                                       optionsValue: 'type',
-                                       value: selectedType">   
-        </select>
-        <button type="submit">Show</button>
+        <div class="form-group">
+          <label>Type:</label>
+          <select name="type" data-bind="options: types,
+                                         optionsText: 'name', 
+                                         optionsValue: 'type',
+                                         value: selectedType"
+                  class="form-control">   
+          </select>
+        </div>
+        <button type="submit" class="btn btn-default">Show</button>
       </form>
+      
       <!-- ko if: places -->
       <div id="venue-list">
         <ul data-bind="foreach: places">
