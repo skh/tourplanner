@@ -143,6 +143,7 @@ var ViewModel = function (gapi) {
 	this.init = function (gapi) {
 		this.gapi = gapi;
 		this.places = ko.observableArray();
+		this.bookmarkedPlaces = ko.observableArray();
 		this.location = ko.observable(gapi.location);
 		this.previousLocation = null;
 		this.zoomLevel = ko.observable(gapi.zoomLevel);
@@ -187,8 +188,14 @@ var ViewModel = function (gapi) {
 		});
 	};
 
-	this.bookmarkPlace = (function (data) {
-		console.log(data);
+	this.toggleBookmarkPlace = (function (data) {
+		var idx = this.bookmarkedPlaces().indexOf(data);
+		if (idx == -1) {
+			this.bookmarkedPlaces().push(data);
+		} else {
+			this.bookmarkedPlaces().splice(idx, 1);
+		}
+		console.log(this.bookmarkedPlaces());
 	}).bind(this);
 
 	this.searchPlaces = function () {
