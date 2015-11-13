@@ -2,6 +2,18 @@
 var GAPI = function (location, zoomLevel) {
 	this.zoomLevel = zoomLevel;
 	this.location = location;
+	this.types = [
+		{"name": "Cafe", "type": "cafe"},
+		{"name": "Bankomat", "type": "atm"},
+		{"name": "Museum", "type": "museum"},
+		{"name": "Library", "type": "library"},
+		{"name": "Book store", "type": "book_store"},
+		{"name": "Restaurant", "type": "restaurant"},
+		{"name": "Movie theater", "type": "movie_theater"},
+		{"name": "Hotel", "type": "hotel"},
+		{"name": "Park", "type": "park"}
+
+	];
 
 	this.init = function () {
 		this.map = new google.maps.Map(document.getElementById('map'), {
@@ -137,6 +149,8 @@ var ViewModel = function (gapi) {
 		this.initialZoomLevel = this.zoomLevel();
 		this.recentLocations = ko.observableArray();
 		this.recentLocations.push(this.location());
+		this.types = ko.observableArray(gapi.types);
+		this.selectedType = ko.observable();
 	};
 
 	this.showLocation = function () {
@@ -176,6 +190,12 @@ var ViewModel = function (gapi) {
 	this.bookmarkPlace = (function (data) {
 		console.log(data);
 	}).bind(this);
+
+	this.searchPlaces = function () {
+		this.toggleAllMarkers();
+		this.places.removeAll();
+		this.gapi.nearbySearch(this.places, this.selectedType());
+	};
 
 	this.zoomOut = function () {
 		if (this.zoomLevel() > 1) {

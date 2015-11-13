@@ -33,8 +33,14 @@
       <!-- /ko -->
     </section>
     <section id="places-panel" class="content-panel">
-      <button type="submit" data-bind="click: loadBookstores">Load bookstores</button>
-      <button class="button tiny" type="submit" data-bind="click: loadCoffeeshops">Load coffee shops</button>
+      <form data-bind="submit: searchPlaces">
+        <select name="type" data-bind="options: types,
+                                       optionsText: 'name', 
+                                       optionsValue: 'type',
+                                       value: selectedType">   
+        </select>
+        <button type="submit">Show</button>
+      </form>
       <!-- ko if: places -->
       <div id="venue-list">
         <ul data-bind="foreach: places">
