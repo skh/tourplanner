@@ -22,9 +22,8 @@
   <div id="panel">
     <nav id="panel-nav">
       <ul class="nav nav-tabs">
-        <li><a class="active" id="location-tab">Location</a></li>
-        <li><a id="places-tab">Places</a></li>
-        <li><a id="bookmarks-tab">Bookmarks</a></li>
+        <li><a class="active" id="location-tab">Select Location</a></li>
+        <li><a id="places-tab">Search Places</a></li>
       </ul>
     </nav>
     <section id="location-panel" class="content-panel">
@@ -48,7 +47,7 @@
     <section id="places-panel" class="content-panel">
       <form data-bind="submit: loadPlaces, event: {reset: clearPlaces}">
         <div class="form-group">
-          <label>Type:</label>
+          <label>Search for:</label>
           <select name="type" data-bind="options: types,
                                          optionsText: 'name', 
                                          optionsValue: 'type',
@@ -57,7 +56,7 @@
           </select>
         </div>
         <div class="form-group">
-          <label>Search for:</label>
+          <label>Refine search:</label>
           <input type="text" data-bind="value: filter"
                  class="form-control">
         </div>
@@ -75,9 +74,6 @@
         </ul>
       </div>
       <!-- /ko -->
-    </section>
-    <section id="bookmarks-panel" class="content-panel">
-      
     </section>
   </div>
   <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>

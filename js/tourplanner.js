@@ -11,7 +11,8 @@ var GAPI = function (location, zoomLevel) {
 		{"name": "Restaurant", "type": "restaurant"},
 		{"name": "Movie theater", "type": "movie_theater"},
 		{"name": "Hotel", "type": "hotel"},
-		{"name": "Park", "type": "park"}
+		{"name": "Park", "type": "park"},
+		{"name": "Taxis", "type": "taxi_stand"}
 	];
 
 	this.init = function () {
@@ -142,10 +143,6 @@ var ViewModel = function (gapi) {
 	this.init = function (gapi) {
 		this.gapi = gapi;
 		this.places = ko.observableArray();
-		this.bookmarkedPlaces = ko.observableArray();
-		this.bookmarkCount = ko.computed(function () {
-			return 0;
-		});
 		this.location = ko.observable(gapi.location);
 		this.previousLocation = null;
 		this.zoomLevel = ko.observable(gapi.zoomLevel);
@@ -192,16 +189,6 @@ var ViewModel = function (gapi) {
 			place.toggleMarker();
 		});
 	};
-
-	this.toggleBookmarkPlace = (function (data) {
-		var idx = this.bookmarkedPlaces().indexOf(data);
-		if (idx == -1) {
-			this.bookmarkedPlaces().push(data);
-		} else {
-			this.bookmarkedPlaces().splice(idx, 1);
-		}
-		console.log(this.bookmarkedPlaces());
-	}).bind(this);
 
 	this.loadPlaces = function () {
 		this.toggleAllMarkers();
