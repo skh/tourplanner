@@ -20,7 +20,7 @@ var GAPI = function (location, zoomLevel) {
 			zoom: this.zoomLevel,
 			mapTypeControl: false,
 			streetViewControl: false,
-			zoomControl: false,
+			zoomControl: true,
 			mapTypeId: google.maps.MapTypeId.ROADMAP,
 			styles: [
 				{
@@ -61,7 +61,7 @@ var GAPI = function (location, zoomLevel) {
 
 	this.nearbySearch = function (places, query) {
 		var request = {
-			location: this.here,
+			bounds: this.map.getBounds(),
 			radius: '1000',
 			keyword: query
 		};
@@ -76,6 +76,7 @@ var GAPI = function (location, zoomLevel) {
 			}).bind(this));
 		}).bind(this));
 	};
+
 };
 
 var Place = function (name, lat, lng, placeId) {
@@ -162,10 +163,8 @@ var Place = function (name, lat, lng, placeId) {
 var ViewModel = function (gapi) {
 	
 	this.init = function (gapi) {
-		// Google Maps API object
+		// Google Maps API object.
 		this.gapi = gapi;
-		this.zoomLevel = ko.observable(gapi.zoomLevel);
-		this.initialZoomLevel = this.zoomLevel();
 
 		// The location is the area in which to search
 		// The user can change this in the UI
@@ -253,22 +252,6 @@ var ViewModel = function (gapi) {
 		this.toggleAllMarkers();
 		this.places.removeAll();
 	};
-
-	this.zoomOut = function () {
-		if (this.zoomLevel() > 1) {
-			this.zoomLevel(this.zoomLevel() - 1);
-			this.gapi.setZoom(this.zoomLevel());
-		}
-	};
-
-	this.zoomIn = function () {
-		if (this.zoomLevel() < 21) {
-			this.zoomLevel(this.zoomLevel() + 1);
-			this.gapi.setZoom(this.zoomLevel());
-		}
-	};
-
-
 
 	this.init(gapi);
 }

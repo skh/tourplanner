@@ -21,13 +21,6 @@ html, body { height: 100%; margin: 0; padding: 0; }
 	padding: 0;
 }
 
-#zoom {
-	position: absolute;
-	right: 300px;
-	top: 16px;
-	z-index: 100;
-}
-
 #venue-list {
 	height: 100%;
 	overflow-y: auto;
