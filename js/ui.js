@@ -10,8 +10,8 @@ $(function() {
   };
 
   var enableTab = function (el) {
-    $(".tab.active").removeClass("active");
-    $(el).addClass("active");
+    $("li.active").removeClass("active");
+    $(el).parent().addClass("active");
   };
 
   $('#location-tab').click(function (e) {
@@ -22,11 +22,6 @@ $(function() {
   $('#places-tab').click(function (e) {
     enableTab(e.target);
     enablePanel('#places-panel');
-  });
-
-  $('#bookmarks-tab').click(function (e) {
-    enableTab(e.target);
-    enablePanel('#bookmarks-panel');
   });
 });
 

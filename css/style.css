@@ -41,15 +41,20 @@ html, body { height: 100%; margin: 0; padding: 0; }
 }
 
 #venue-list li, #location-list li {
+	color: #337ab7;
 	list-style-type: none;
 	font-family: sans-serif;
-	font-size: 0.9em;
-	padding: 4px;
-	border-bottom: 1px dotted #cccccc;
+	padding: 10px 15px;
+	border-bottom: 1px solid #ddd;
+}
+
+#venue-list li:hover, #location-list li:hover {
+	background-color: #eee;
+	color: #333;
 }
 
 .content-panel {
-	padding: 5px;
+	padding: 0;
 }
 
 #location-panel {
@@ -62,38 +67,4 @@ html, body { height: 100%; margin: 0; padding: 0; }
 
 #bookmarks-panel {
 	display: none;
-}
-
-.tab {
-	color: #656565;
-	font-weight: bold;
-}
-
-.tab:hover {
-	color: #000000;
-	text-decoration: none;
-}
-
-.tab.active {
-	color: #000000;
-}
-
-.bookmark {
-	color: #ccc;
-}
-
-.bookmark:hover {
-	color: #ff9900;
-}
-
-.place {
-	margin-left: 5px;
-}
-
-footer {
-	position: absolute;
-	bottom: 0;
-	padding: 10px;
-	border-top: 2px solid #cccccc;
-	width: 100%;
 }
