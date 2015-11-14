@@ -46,13 +46,18 @@
                   class="form-control">   
           </select>
         </div>
+        <div class="form-group">
+          <label>Search for:</label>
+          <input type="text" data-bind="value: filter"
+                 class="form-control">
+        </div>
         <button type="submit" class="btn btn-default">Show</button>
         <button type="reset" class="btn btn-default">Clear</button>
       </form>
       
-      <!-- ko if: places -->
+      <!-- ko if: filteredPlaces -->
       <div id="venue-list">
-        <ul data-bind="foreach: places">
+        <ul data-bind="foreach: filteredPlaces">
           <li>
             <span class="bookmark glyphicon glyphicon-star" data-bind="click: $root.toggleBookmarkPlace"></span>
             <span class="place" data-bind="text: name, click: $root.onClickHandler"></span>

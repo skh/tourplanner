@@ -4,7 +4,7 @@ var GAPI = function (location, zoomLevel) {
 	this.location = location;
 	this.types = [
 		{"name": "Cafe", "type": "cafe"},
-		{"name": "Bankomat", "type": "atm"},
+		{"name": "ATM", "type": "atm"},
 		{"name": "Museum", "type": "museum"},
 		{"name": "Library", "type": "library"},
 		{"name": "Book store", "type": "book_store"},
@@ -12,7 +12,6 @@ var GAPI = function (location, zoomLevel) {
 		{"name": "Movie theater", "type": "movie_theater"},
 		{"name": "Hotel", "type": "hotel"},
 		{"name": "Park", "type": "park"}
-
 	];
 
 	this.init = function () {
@@ -152,6 +151,17 @@ var ViewModel = function (gapi) {
 		this.recentLocations.push(this.location());
 		this.types = ko.observableArray(gapi.types);
 		this.selectedType = ko.observable();
+		this.filter = ko.observable("");
+		this.filteredPlaces = ko.computed(function () {
+			var filter = this.filter().toLowerCase();
+			if (!filter || this.filter().length == 0) {
+				return this.places();
+			} else {
+				return ko.utils.arrayFilter(this.places(), function (place) {
+					return place.name.toLowerCase().indexOf(filter) != -1;
+				});
+			}
+		}, this);
 	};
 
 	this.showLocation = function () {
