@@ -84,17 +84,27 @@ var Place = function (name, lat, lng, placeId) {
 	this.lng = lng;
 	this.placeId = placeId;
 	this.website = "";
+
+	this.getClickHandler = function () {
+		// closure! yeehaa!
+		var place = this;
+		return function (e) {
+			viewModel.selectPlace(place);
+		};
+	};
 	
 	this.marker = new google.maps.Marker({
 		position: new google.maps.LatLng(this.lat, this.lng),
 		title: this.name
 	});
+	this.markerVisible = false;
+	this.marker.addListener('click', this.getClickHandler());
 
 	this.infowindow = new google.maps.InfoWindow({
     content: ""
   });
 
-	this.markerVisible = false;
+  this.infowindow.addListener('closeclick', this.getClickHandler());
 
 	this.toggleMarker = function (gapi) {
 		this.markerVisible = !this.markerVisible;
@@ -104,36 +114,47 @@ var Place = function (name, lat, lng, placeId) {
 			this.marker.setMap(null);
 		}		
 	};
-	this.toggleAnimateMarker = function () {
-		if (this.marker.getAnimation() != null) {
-			this.marker.setAnimation(null);
-		} else {
-			this.marker.setAnimation(google.maps.Animation.BOUNCE);
-		}
+	this.startMarkerAnimation = function () {
+		this.marker.setAnimation(google.maps.Animation.BOUNCE);
 	};
 
-	this.getDetails = function (gapi) {
-		console.log("x");
+	this.stopMarkerAnimation = function () {
+		this.marker.setAnimation(null);
+	};
+
+	this.generateDetails = function (gapi) {
 		var request = {
 				placeId: this.placeId
 		};
 		gapi.service.getDetails(request, (function (result, status) {
 			if (status == google.maps.places.PlacesServiceStatus.OK) {
 				this.website = result.website;
-				this.picture_url = result.photos[0];
+				if (result.photos) {
+					this.picture_url = result.photos[0];
+				}
 				this.infowindow.setContent(this._getContentString());
 			}
 		}).bind(this));
+		this.getFoursquareDetails();
+	};
+
+	this.getFoursquareDetails = function () {
+
 	};
 
 	this.showInfoWindow = function (gapi) {
 		this.infowindow.open(gapi.map, this.marker);
 	};
 
+	this.hideInfoWindow = function () {
+		this.infowindow.close();
+	};
+
 	this._getContentString = function () {
 		var content = "<a href=\"" + this.website + "\">"+ this.name + "</a>";
 		return content;
 	};
+
 };
 
 
@@ -141,16 +162,30 @@ var Place = function (name, lat, lng, placeId) {
 var ViewModel = function (gapi) {
 	
 	this.init = function (gapi) {
+		// Google Maps API object
 		this.gapi = gapi;
-		this.places = ko.observableArray();
-		this.location = ko.observable(gapi.location);
-		this.previousLocation = null;
 		this.zoomLevel = ko.observable(gapi.zoomLevel);
 		this.initialZoomLevel = this.zoomLevel();
+
+		// The location is the area in which to search
+		// The user can change this in the UI
+		// A list of previous locations is kept for convenience
+		this.location = ko.observable(gapi.location);
+		this.previousLocation = this.location();
 		this.recentLocations = ko.observableArray();
 		this.recentLocations.push(this.location());
+
+		// Google Places API types
+		// Available in the UI in a dropdown menu
 		this.types = ko.observableArray(gapi.types);
 		this.selectedType = ko.observable();
+
+		// Google Places API places
+		// The result of the search for a specific type of place
+		this.places = ko.observableArray();
+		this.selectedPlace = ko.observable(undefined);
+
+		// Plain string to filter the search result from the Places API
 		this.filter = ko.observable("");
 		this.filteredPlaces = ko.computed(function () {
 			var filter = this.filter().toLowerCase();
@@ -184,6 +219,24 @@ var ViewModel = function (gapi) {
 		this.showLocation();
 	}).bind(this);
 
+	this.selectPlace = (function (place) {
+		if (this.selectedPlace()) {
+			this.selectedPlace().stopMarkerAnimation();
+			this.selectedPlace().hideInfoWindow();
+		}
+
+		if (place != this.selectedPlace()) {
+			place.startMarkerAnimation();
+			place.generateDetails(this.gapi);
+			place.showInfoWindow(this.gapi);
+			this.selectedPlace(place);
+		} else {
+			// second click on the same place unselects it.
+			this.selectedPlace(undefined);
+		}
+
+	}).bind(this);
+
 	this.toggleAllMarkers = function () {
 		this.places().forEach(function (place) {
 			place.toggleMarker();
@@ -215,11 +268,7 @@ var ViewModel = function (gapi) {
 		}
 	};
 
-	this.onClickHandler = (function (item) {
-		item.toggleAnimateMarker();
-		item.getDetails(this.gapi);
-		item.showInfoWindow(this.gapi);
-	}).bind(this);
+
 
 	this.init(gapi);
 }

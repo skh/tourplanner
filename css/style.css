@@ -53,6 +53,12 @@ html, body { height: 100%; margin: 0; padding: 0; }
 	color: #333;
 }
 
+#venue-list li.selected {
+	background-color: #eee;
+	color: #333;
+	font-weight: bold;
+}
+
 .content-panel {
 	padding: 0;
 }
