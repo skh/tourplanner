@@ -18,13 +18,14 @@
       </ul>
     </nav>
     <section id="location-panel" class="content-panel">
-      <form data-bind="submit: showLocation">
+      <form data-bind="submit: showLocation, event: {reset: clearLocations}">
         <div class="form-group">
           <label>Location:</label>
           <input type="text" id="location" data-bind="value: location"
                  class="form-control">
           </div>
         <button type="submit" class="btn btn-default">Show</button>
+        <button type="reset" class="btn btn-default">Clear</button>
       </form>
       <!-- ko if: recentLocations -->
       <div id="location-list">
@@ -35,7 +36,7 @@
       <!-- /ko -->
     </section>
     <section id="places-panel" class="content-panel">
-      <form data-bind="submit: searchPlaces">
+      <form data-bind="submit: loadPlaces, event: {reset: clearPlaces}">
         <div class="form-group">
           <label>Type:</label>
           <select name="type" data-bind="options: types,
@@ -46,6 +47,7 @@
           </select>
         </div>
         <button type="submit" class="btn btn-default">Show</button>
+        <button type="reset" class="btn btn-default">Clear</button>
       </form>
       
       <!-- ko if: places -->

@@ -165,22 +165,14 @@ var ViewModel = function (gapi) {
 		}
 	};
 
+	this.clearLocations = function () {
+		console.log(this);
+	};
+
 	this.selectLocation = (function (data) {
 		this.location(data);
 		this.showLocation();
 	}).bind(this);
-
-	this.loadBookstores = function () {
-		this.toggleAllMarkers();
-		this.places.removeAll();
-		this.gapi.nearbySearch(this.places, "bookstore");
-	};
-
-	this.loadCoffeeshops = function () {
-		this.toggleAllMarkers();
-		this.places.removeAll();
-		this.gapi.nearbySearch(this.places, "coffee");
-	};
 
 	this.toggleAllMarkers = function () {
 		this.places().forEach(function (place) {
@@ -198,10 +190,15 @@ var ViewModel = function (gapi) {
 		console.log(this.bookmarkedPlaces());
 	}).bind(this);
 
-	this.searchPlaces = function () {
+	this.loadPlaces = function () {
 		this.toggleAllMarkers();
 		this.places.removeAll();
 		this.gapi.nearbySearch(this.places, this.selectedType());
+	};
+
+	this.clearPlaces = function () {
+		this.toggleAllMarkers();
+		this.places.removeAll();
 	};
 
 	this.zoomOut = function () {
