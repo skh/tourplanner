@@ -143,6 +143,9 @@ var ViewModel = function (gapi) {
 		this.gapi = gapi;
 		this.places = ko.observableArray();
 		this.bookmarkedPlaces = ko.observableArray();
+		this.bookmarkCount = ko.computed(function () {
+			return 0;
+		});
 		this.location = ko.observable(gapi.location);
 		this.previousLocation = null;
 		this.zoomLevel = ko.observable(gapi.zoomLevel);
