@@ -21,19 +21,26 @@ html, body { height: 100%; margin: 0; padding: 0; }
 	padding: 0;
 }
 
-#venue-list {
-	height: 100%;
-	overflow-y: auto;
-	width: 98%;
-	border-top: 2px solid #cccccc;
+form {
+	padding: 10px;
+	border-bottom: 1px solid #cccccc;
 }
 
-#venue-list ul, #location-list ul {
+#places-list {
+	position: absolute;
+	top: 298px;
+	left: 0px;
+	bottom: 0px;
+	width: 100%;
+	overflow-y: auto;
+}
+
+#places-list ul {
 	padding: 0;
 	margin: 0;
 }
 
-#venue-list li, #location-list li {
+#places-list li {
 	color: #337ab7;
 	list-style-type: none;
 	font-family: sans-serif;
@@ -41,29 +48,13 @@ html, body { height: 100%; margin: 0; padding: 0; }
 	border-bottom: 1px solid #ddd;
 }
 
-#venue-list li:hover, #location-list li:hover {
+#places-list li:hover {
 	background-color: #eee;
 	color: #333;
 }
 
-#venue-list li.selected {
+#places-list li.selected {
 	background-color: #eee;
 	color: #333;
 	font-weight: bold;
-}
-
-.content-panel {
-	padding: 0;
-}
-
-#location-panel {
-	display: block;
-}
-
-#places-panel {
-	display: none;
-}
-
-#bookmarks-panel {
-	display: none;
 }

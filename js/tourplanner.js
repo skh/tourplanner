@@ -11,8 +11,7 @@ var GAPI = function (location, zoomLevel) {
 		{"name": "Restaurant", "type": "restaurant"},
 		{"name": "Movie theater", "type": "movie_theater"},
 		{"name": "Hotel", "type": "hotel"},
-		{"name": "Park", "type": "park"},
-		{"name": "Taxis", "type": "taxi_stand"}
+		{"name": "Park", "type": "park"}
 	];
 
 	this.init = function () {
@@ -59,7 +58,7 @@ var GAPI = function (location, zoomLevel) {
 		}).bind(this));
 	};
 
-	this.nearbySearch = function (places, query) {
+	this.nearbySearch = function (places, query, cb) {
 		var request = {
 			bounds: this.map.getBounds(),
 			radius: '1000',
@@ -72,9 +71,10 @@ var GAPI = function (location, zoomLevel) {
 					item.geometry.location.lng(),
 					item.place_id);
 				places.push(place);
-				place.toggleMarker(this);
 			}).bind(this));
+			cb();
 		}).bind(this));
+
 	};
 
 };
@@ -107,14 +107,14 @@ var Place = function (name, lat, lng, placeId) {
 
   this.infowindow.addListener('closeclick', this.getClickHandler());
 
-	this.toggleMarker = function (gapi) {
-		this.markerVisible = !this.markerVisible;
-		if (this.markerVisible == true) {
-			this.marker.setMap(gapi.map);
-		} else {
-			this.marker.setMap(null);
-		}		
+	this.hideMarker = function (gapi) {
+		this.marker.setMap(null);
 	};
+
+	this.showMarker = function (gapi) {
+		this.marker.setMap(gapi.map);
+	};
+
 	this.startMarkerAnimation = function () {
 		this.marker.setAnimation(google.maps.Animation.BOUNCE);
 	};
@@ -168,11 +168,7 @@ var ViewModel = function (gapi) {
 
 		// The location is the area in which to search
 		// The user can change this in the UI
-		// A list of previous locations is kept for convenience
 		this.location = ko.observable(gapi.location);
-		this.previousLocation = this.location();
-		this.recentLocations = ko.observableArray();
-		this.recentLocations.push(this.location());
 
 		// Google Places API types
 		// Available in the UI in a dropdown menu
@@ -186,9 +182,11 @@ var ViewModel = function (gapi) {
 
 		// Plain string to filter the search result from the Places API
 		this.filter = ko.observable("");
+
+		// The result of applying the filter to the result list
 		this.filteredPlaces = ko.computed(function () {
 			var filter = this.filter().toLowerCase();
-			if (!filter || this.filter().length == 0) {
+			if (this.filter().length == 0) {
 				return this.places();
 			} else {
 				return ko.utils.arrayFilter(this.places(), function (place) {
@@ -199,24 +197,10 @@ var ViewModel = function (gapi) {
 	};
 
 	this.showLocation = function () {
-		this.toggleAllMarkers();
+		this.hideAllMarkers();
 		this.places.removeAll();
 		this.gapi.showLocation(this.location());
-		this.gapi.setZoom(this.initialZoomLevel);
-		this.zoomLevel(this.initialZoomLevel);
-		if (this.recentLocations().indexOf(this.location()) == -1) {
-			this.recentLocations.push(this.location());
-		}
 	};
-
-	this.clearLocations = function () {
-		console.log(this);
-	};
-
-	this.selectLocation = (function (data) {
-		this.location(data);
-		this.showLocation();
-	}).bind(this);
 
 	this.selectPlace = (function (place) {
 		if (this.selectedPlace()) {
@@ -236,20 +220,24 @@ var ViewModel = function (gapi) {
 
 	}).bind(this);
 
-	this.toggleAllMarkers = function () {
+	this.hideAllMarkers = function () {
 		this.places().forEach(function (place) {
-			place.toggleMarker();
+			place.hideMarker();
 		});
 	};
 
 	this.loadPlaces = function () {
-		this.toggleAllMarkers();
+		this.hideAllMarkers();
 		this.places.removeAll();
-		this.gapi.nearbySearch(this.places, this.selectedType());
+		this.gapi.nearbySearch(this.places, this.selectedType(), (function () {
+			this.filteredPlaces().forEach(function (place) {
+				place.showMarker(this.gapi);
+			}, this);
+		}).bind(this));
 	};
 
 	this.clearPlaces = function () {
-		this.toggleAllMarkers();
+		this.hideAllMarkers();
 		this.places.removeAll();
 	};
 

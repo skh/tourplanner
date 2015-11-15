@@ -10,32 +10,14 @@
 <body>
   <div id="map"></div>
   <div id="panel">
-    <nav id="panel-nav">
-      <ul class="nav nav-tabs">
-        <li class="active"><a id="location-tab">Select Location</a></li>
-        <li><a id="places-tab">Search Places</a></li>
-      </ul>
-    </nav>
-    <section id="location-panel" class="content-panel">
-      <form data-bind="submit: showLocation, event: {reset: clearLocations}">
+    <div id="forms">
+      <form data-bind="submit: showLocation">
         <div class="form-group">
           <label>Location:</label>
           <input type="text" id="location" data-bind="value: location"
-                 class="form-control">
-          </div>
-        <button type="submit" class="btn btn-default">Show</button>
-        <button type="reset" class="btn btn-default">Clear</button>
+          class="form-control">
+        </div>
       </form>
-
-      <!-- ko if: recentLocations -->
-      <div id="location-list">
-        <ul data-bind="foreach: recentLocations">
-          <li data-bind="text: $data, click: $root.selectLocation"></li>
-        </ul>
-      </div>
-      <!-- /ko -->
-    </section>
-    <section id="places-panel" class="content-panel">
       <form data-bind="submit: loadPlaces, event: {reset: clearPlaces}">
         <div class="form-group">
           <label>Search for:</label>
@@ -54,19 +36,17 @@
         <button type="submit" class="btn btn-default">Show</button>
         <button type="reset" class="btn btn-default">Clear</button>
       </form>
-      
-      <!-- ko if: filteredPlaces -->
-      <div id="venue-list">
-        <ul data-bind="foreach: filteredPlaces">
-          <li data-bind="css: {
-            selected: $root.selectedPlace() &&
-               placeId == $root.selectedPlace().placeId}">
-            <span class="place" data-bind="text: name, click: $root.selectPlace"></span>
-          </li>
-        </ul>
-      </div>
-      <!-- /ko -->
-    </section>
+    </div>
+    <!-- ko if: filteredPlaces -->
+    <div id="places-list">
+      <ul data-bind="foreach: filteredPlaces">
+      <li data-bind="css: { selected: $root.selectedPlace() &&
+                            placeId == $root.selectedPlace().placeId }">
+        <span class="place" data-bind="text: name, click: $root.selectPlace"></span>
+      </li>
+      </ul>
+    </div>
+  <!-- /ko -->
   </div>
   <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
   <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
