@@ -38,10 +38,6 @@ var GAPI = function (location, zoomLevel) {
 	$.getScript("https://maps.googleapis.com/maps/api/js?key="
 		+ config.maps_api_key + "&callback=gapi.init&libraries=places");
 
-	this.setZoom = function (zoom) {
-		this.map.setZoom(zoom);
-	};
-
 	this.showLocation = function (location) {
 		this.geocoder.geocode( { 'address': location}, (function(results, status) {
 			if (status == google.maps.GeocoderStatus.OK) {
@@ -74,8 +70,11 @@ var GAPI = function (location, zoomLevel) {
 			}).bind(this));
 			cb();
 		}).bind(this));
-
 	};
+
+	this.setCenter = function (lat, lng) {
+  		this.map.setCenter({lat: lat, lng: lng});
+  	};
 
 };
 
@@ -85,9 +84,12 @@ var Place = function (name, lat, lng, placeId) {
 	this.lng = lng;
 	this.placeId = placeId;
 	this.website = "";
+	this.picture_url = "/img/placeholder.jpg";
+	this.status = "unknown";
+	this.foursquareHereNow = "unknown";
+	this.foursquareCheckinsCount = "unknown";
 
 	this.getClickHandler = function () {
-		// closure! yeehaa!
 		var place = this;
 		return function (e) {
 			viewModel.selectPlace(place);
@@ -102,10 +104,10 @@ var Place = function (name, lat, lng, placeId) {
 	this.marker.addListener('click', this.getClickHandler());
 
 	this.infowindow = new google.maps.InfoWindow({
-    content: ""
-  });
+    	content: ""
+  	});
 
-  this.infowindow.addListener('closeclick', this.getClickHandler());
+  	this.infowindow.addListener('closeclick', this.getClickHandler());
 
 	this.hideMarker = function (gapi) {
 		this.marker.setMap(null);
@@ -124,26 +126,12 @@ var Place = function (name, lat, lng, placeId) {
 	};
 
 	this.generateDetails = function (gapi) {
-		var request = {
-				placeId: this.placeId
-		};
-		gapi.service.getDetails(request, (function (result, status) {
-			if (status == google.maps.places.PlacesServiceStatus.OK) {
-				this.website = result.website;
-				if (result.photos) {
-					this.picture_url = result.photos[0];
-				}
-				this.infowindow.setContent(this._getContentString());
-			}
-		}).bind(this));
-		this.getFoursquareDetails();
-	};
-
-	this.getFoursquareDetails = function () {
-
+		this._getPlacesDetails(gapi);
+		this._getFoursquareDetails(this.lat, this.lng, this.name);
 	};
 
 	this.showInfoWindow = function (gapi) {
+		this.infowindow.setContent(this._getContentString());
 		this.infowindow.open(gapi.map, this.marker);
 	};
 
@@ -151,8 +139,48 @@ var Place = function (name, lat, lng, placeId) {
 		this.infowindow.close();
 	};
 
+	this._getPlacesDetails = function (gapi) {
+		var request = {
+			placeId: this.placeId
+		};
+		gapi.service.getDetails(request, (function (result, status) {
+			if (status == google.maps.places.PlacesServiceStatus.OK) {
+				console.log(result);
+				this.website = result.website;
+				if (result.photos) {
+					this.picture_url = result.photos[0].getUrl({'maxWidth': 200, 'maxHeight': 145});
+					this.status = result.opening_hours.open_now ? "Open" : "Closed";
+				}
+			}
+		}).bind(this));
+	};
+
+	this._getFoursquareDetails = function (lat, lng, query) {			
+		var explore_url = "https://api.foursquare.com/v2/venues/search";		
+		explore_url += "?client_id=" + config.foursquare_client_id;		
+		explore_url += "&client_secret=" + config.foursquare_client_secret;		
+		explore_url += "&v=20151017"		
+		explore_url += "&ll=" + lat + "," + lng;		
+		explore_url += "&radius=50";		
+		explore_url += "&limit=1"		
+		explore_url += "&query=" + query;		
+		
+		$.getJSON(explore_url, (function (data) {		
+			var venues = data.response.venues;		
+			venues.forEach(function (venue) {	
+				this.foursquareHereNow = venue.hereNow.count;
+				this.foursquareCheckinsCount = venue.stats.checkinsCount;	
+			}, this);		
+		}).bind(this));		
+	};	
+
 	this._getContentString = function () {
-		var content = "<a href=\"" + this.website + "\">"+ this.name + "</a>";
+		var content = "<h3>" + this.name + "</h3>"
+		content += "<img class=\"thumbnail\" src=" + this.picture_url + ">";
+		content +=
+		  "<p><a target=\"_blank\" href=\"" + this.website + "\">Website</a> | Status: " + this.status + "</p>";
+		content += 
+		  "<p>Here now: " + this.foursquareHereNow + " | Total checkins: " + this.foursquareCheckinsCount + "</p>"
 		return content;
 	};
 
@@ -210,8 +238,8 @@ var ViewModel = function (gapi) {
 
 		if (place != this.selectedPlace()) {
 			place.startMarkerAnimation();
-			place.generateDetails(this.gapi);
 			place.showInfoWindow(this.gapi);
+			this.gapi.setCenter(place.lat, place.lng)
 			this.selectedPlace(place);
 		} else {
 			// second click on the same place unselects it.
@@ -232,6 +260,7 @@ var ViewModel = function (gapi) {
 		this.gapi.nearbySearch(this.places, this.selectedType(), (function () {
 			this.filteredPlaces().forEach(function (place) {
 				place.showMarker(this.gapi);
+				place.generateDetails(this.gapi);
 			}, this);
 		}).bind(this));
 	};
@@ -244,7 +273,7 @@ var ViewModel = function (gapi) {
 	this.init(gapi);
 }
 
-var initialLocation = "Nuremberg, Germany";
+var initialLocation = "Mountain View";
 var initialZoomLevel = 15;
 var gapi = new GAPI(initialLocation, initialZoomLevel);
 var viewModel = new ViewModel(gapi);

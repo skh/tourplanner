@@ -1,19 +1,7 @@
-# tourplanner
+This project uses the Google Maps API to show a map, load a list of places by type, and search within these places.
 
-- have a city preset, and allow the user to enter a different one
-- have a list of Yelp categories to query (Restaurants, Museums, etc.)
-- show the result of the Yelp Query on Map and in List
-- Filter on that list based on user input / available data (tbd)
-  - maybe on Subcategories? can they be retrieved from the API?
-- on map and in list, allow user to bookmark items
-- toggle between 'show all' and 'show bookmarks only'
+To run the code, you need to obtain Google Maps API and Foursquare API keys. Copy the file `js/config.js.in` to `js/config.js` and add your API keys to the file.
 
-- user can create an itinerary for a certain day
-- show weather forecast for that day and city
-- user can add places to itinerary
-  - either with exact time, or 'morning/afternoon/evening'
-  - check if places are open!
-- offer print view of itinerary
+Then, run a local web server in the root directory of the project (I use `python -m SimpleHTTPServer`) or copy the files to your web server.
 
-- on-screen help
-- map pan and zoom changes yelp search location and radius
+
