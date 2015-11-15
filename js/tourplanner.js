@@ -87,7 +87,6 @@ var Place = function (name, lat, lng, placeId) {
 	this.website = "";
 
 	this.getClickHandler = function () {
-		// closure! yeehaa!
 		var place = this;
 		return function (e) {
 			viewModel.selectPlace(place);
@@ -136,12 +135,26 @@ var Place = function (name, lat, lng, placeId) {
 				this.infowindow.setContent(this._getContentString());
 			}
 		}).bind(this));
-		this.getFoursquareDetails();
+		this.getFoursquareDetails(this.lat, this.lng, this.name);
 	};
 
-	this.getFoursquareDetails = function () {
-
-	};
+	this.getFoursquareDetails = function (lat, lng, query) {			
+		var explore_url = "https://api.foursquare.com/v2/venues/search";		
+		explore_url += "?client_id=" + config.foursquare_client_id;		
+		explore_url += "&client_secret=" + config.foursquare_client_secret;		
+		explore_url += "&v=20151017"		
+		explore_url += "&ll=" + lat + "," + lng;		
+		explore_url += "&radius=50";		
+		explore_url += "&limit=1"		
+		explore_url += "&query=" + query;		
+		
+		$.getJSON(explore_url, function (data) {		
+			var venues = data.response.venues;		
+			venues.forEach(function (venue) {		
+				console.log(venue.name);		
+			});		
+		});		
+	};		
 
 	this.showInfoWindow = function (gapi) {
 		this.infowindow.open(gapi.map, this.marker);
@@ -152,7 +165,8 @@ var Place = function (name, lat, lng, placeId) {
 	};
 
 	this._getContentString = function () {
-		var content = "<a href=\"" + this.website + "\">"+ this.name + "</a>";
+		var content = "<h1>" + this.name + "</h1>"
+		content += "<p><a href=\"" + this.website + "\">"+ this.name + "</a></p>";
 		return content;
 	};
 
