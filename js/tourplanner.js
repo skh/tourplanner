@@ -145,7 +145,6 @@ var Place = function (name, lat, lng, placeId) {
 		};
 		gapi.service.getDetails(request, (function (result, status) {
 			if (status == google.maps.places.PlacesServiceStatus.OK) {
-				console.log(result);
 				this.website = result.website;
 				if (result.photos) {
 					this.picture_url = result.photos[0].getUrl({'maxWidth': 200, 'maxHeight': 145});
