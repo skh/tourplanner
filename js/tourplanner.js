@@ -238,7 +238,7 @@ var Place = function (name, lat, lng, placeId) {
 		content += "<img class=\"thumbnail\" src=" + this.picture_url + ">";
 		content += "<p>";
 		if (this.website.length > 0) {
-			content += "<a target=\"_blank\" href=\"" + this.website + "\">Website</a> | h"; 
+			content += "<a target=\"_blank\" href=\"" + this.website + "\">Website</a> | "; 
 		}
 		content += "Status: " + this.status + "</p>";
 		content += "<p>Here now: " + this.foursquareHereNow;
