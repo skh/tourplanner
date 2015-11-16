@@ -17,13 +17,13 @@ html, body { height: 100%; margin: 0; padding: 0; }
 	z-index: 99;
 	background-color: white;
 	opacity: 0.95;
-	border-left: 2px solid #cccccc;
+	border-left: 2px solid #ddd;
 	padding: 0;
 }
 
 form {
 	padding: 10px;
-	border-bottom: 1px solid #cccccc;
+	border-bottom: 1px solid #ddd;
 }
 
 #places-list {
@@ -57,4 +57,26 @@ form {
 	background-color: #eee;
 	color: #333;
 	font-weight: bold;
+}
+
+#toggle {
+	color: #555;
+	background-color: #fff;
+	z-index: 150;
+	position: absolute;
+	top: 6px;
+	right: 6px;
+	font-size: 1.2em;
+	border 0 solid #ddd;
+	border-radius: 2px;
+}
+
+#toggle.closed {
+	padding: 8px 8px 4px 4px;
+	border-width: 2px;
+}
+
+#toggle.open {
+	padding: 0;
+	border-width: 0px;
 }

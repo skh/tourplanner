@@ -1,3 +1,46 @@
+// Panel handling
+var closePanel = function () {
+	var $togglebutton = $('#toggle');
+	var $map = $('#map');
+	var $panel = $('#panel');
+	$map.css({right: 0});
+	$panel.css({right: -284});
+	google.maps.event.trigger(map, 'resize');
+	$togglebutton.find('span')
+		.removeClass('glyphicon-triangle-right')
+		.addClass('glyphicon-triangle-left');
+	$togglebutton
+		.removeClass('open')
+		.addClass('closed')
+		.unbind('click', closePanel)
+		.bind('click', openPanel);
+};
+var openPanel = function () {
+	var $togglebutton = $('#toggle');
+	var $map = $('#map');
+	var $panel = $('#panel');
+	$map.css({right: 284});
+	$panel.css({right: 0});
+	google.maps.event.trigger(map, 'resize');
+	$togglebutton.find('span')
+		.removeClass('glyphicon-triangle-left')
+		.addClass('glyphicon-triangle-right');
+	$togglebutton
+		.removeClass('closed')
+		.addClass('open')
+		.unbind('click', openPanel)
+		.bind('click', closePanel);
+};
+var closePanelIfSmallScreen = function() {
+	if ($(window).width() < 400) {
+		closePanel();
+	}
+};
+$(document).ready(function () {
+	var $togglebutton = $('#toggle');
+	$togglebutton.click(closePanel);	
+});
+
 // Google Maps object and helper functions
 var GAPI = function (location, zoomLevel) {
 	this.zoomLevel = zoomLevel;
@@ -35,8 +78,7 @@ var GAPI = function (location, zoomLevel) {
 		this.showLocation(this.location);
 	};
 
-	$.getScript("https://maps.googleapis.com/maps/api/js?key="
-		+ config.maps_api_key + "&callback=gapi.init&libraries=places");
+	$.getScript("https://maps.googleapis.com/maps/api/js?key=" + config.maps_api_key + "&callback=gapi.init&libraries=places");
 
 	this.showLocation = function (location) {
 		this.geocoder.geocode( { 'address': location}, (function(results, status) {
@@ -145,9 +187,9 @@ var Place = function (name, lat, lng, placeId) {
 		};
 		gapi.service.getDetails(request, (function (result, status) {
 			if (status == google.maps.places.PlacesServiceStatus.OK) {
-				this.website = result.website;
+				this.website = result.website || "";
 				if (result.photos) {
-					this.picture_url = result.photos[0].getUrl({'maxWidth': 200, 'maxHeight': 145});
+					this.picture_url = result.photos[0].getUrl({'maxWidth': 132, 'maxHeight': 96});
 					this.status = result.opening_hours.open_now ? "Open" : "Closed";
 				}
 			}
@@ -158,10 +200,10 @@ var Place = function (name, lat, lng, placeId) {
 		var explore_url = "https://api.foursquare.com/v2/venues/search";		
 		explore_url += "?client_id=" + config.foursquare_client_id;		
 		explore_url += "&client_secret=" + config.foursquare_client_secret;		
-		explore_url += "&v=20151017"		
+		explore_url += "&v=20151017";
 		explore_url += "&ll=" + lat + "," + lng;		
 		explore_url += "&radius=50";		
-		explore_url += "&limit=1"		
+		explore_url += "&limit=1";
 		explore_url += "&query=" + query;		
 		
 		$.getJSON(explore_url, (function (data) {		
@@ -174,12 +216,15 @@ var Place = function (name, lat, lng, placeId) {
 	};	
 
 	this._getContentString = function () {
-		var content = "<h3>" + this.name + "</h3>"
+		var content = "<h4>" + this.name + "</h4>";
 		content += "<img class=\"thumbnail\" src=" + this.picture_url + ">";
-		content +=
-		  "<p><a target=\"_blank\" href=\"" + this.website + "\">Website</a> | Status: " + this.status + "</p>";
-		content += 
-		  "<p>Here now: " + this.foursquareHereNow + " | Total checkins: " + this.foursquareCheckinsCount + "</p>"
+		content += "<p>";
+		if (this.website.length > 0) {
+			content += "<a target=\"_blank\" href=\"" + this.website + "\">Website</a> | "; 
+		}
+		content += "Status: " + this.status + "</p>";
+		content += "<p>Here now: " + this.foursquareHereNow;
+		content += " | Total checkins: " + this.foursquareCheckinsCount + "</p>";
 		return content;
 	};
 
@@ -213,7 +258,7 @@ var ViewModel = function (gapi) {
 		// The result of applying the filter to the result list
 		this.filteredPlaces = ko.computed(function () {
 			var filter = this.filter().toLowerCase();
-			if (this.filter().length == 0) {
+			if (this.filter().length === 0) {
 				return this.places();
 			} else {
 				return ko.utils.arrayFilter(this.places(), function (place) {
@@ -238,7 +283,7 @@ var ViewModel = function (gapi) {
 		if (place != this.selectedPlace()) {
 			place.startMarkerAnimation();
 			place.showInfoWindow(this.gapi);
-			this.gapi.setCenter(place.lat, place.lng)
+			closePanelIfSmallScreen();
 			this.selectedPlace(place);
 		} else {
 			// second click on the same place unselects it.
@@ -270,10 +315,11 @@ var ViewModel = function (gapi) {
 	};
 
 	this.init(gapi);
-}
+};
 
 var initialLocation = "Mountain View";
 var initialZoomLevel = 15;
 var gapi = new GAPI(initialLocation, initialZoomLevel);
 var viewModel = new ViewModel(gapi);
 ko.applyBindings (viewModel);
+
