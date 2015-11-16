@@ -80,3 +80,12 @@ form {
 	padding: 0;
 	border-width: 0px;
 }
+
+#alert {
+	z-index: 200;
+	position: absolute;
+	position: absolute;
+	top: 298px;
+	width: 100%;
+	display: none;
+}

@@ -37,9 +37,17 @@ var closePanelIfSmallScreen = function() {
 	}
 };
 $(document).ready(function () {
-	var $togglebutton = $('#toggle');
-	$togglebutton.click(closePanel);	
+	$('#toggle').click(closePanel);	
 });
+
+// Error message handling
+var showAlert = function () {
+	$('#alert').show();
+};
+
+var hideAlert = function () {
+	$('#alert').hide();
+};
 
 // Google Maps object and helper functions
 var GAPI = function (location, zoomLevel) {
@@ -56,6 +64,7 @@ var GAPI = function (location, zoomLevel) {
 		{"name": "Hotel", "type": "hotel"},
 		{"name": "Park", "type": "park"}
 	];
+	this.doneLoading = false;
 
 	this.init = function () {
 		this.map = new google.maps.Map(document.getElementById('map'), {
@@ -76,6 +85,7 @@ var GAPI = function (location, zoomLevel) {
 		this.service = new google.maps.places.PlacesService(this.map);
 		this.geocoder = new google.maps.Geocoder();
 		this.showLocation(this.location);
+		this.doneLoading = true;
 	};
 
 	$.getScript("https://maps.googleapis.com/maps/api/js?key=" + config.maps_api_key + "&callback=gapi.init&libraries=places");
@@ -91,33 +101,36 @@ var GAPI = function (location, zoomLevel) {
 					position: results[0].geometry.location
 				});*/
 			} else {
-				alert('Geocode was not successful for the following reason: ' + status);
+				showAlert();
 			}
 		}).bind(this));
 	};
 
 	this.nearbySearch = function (places, query, cb) {
+		if (!this.map.getBounds()) {
+			showAlert();
+			return;
+		}
 		var request = {
 			bounds: this.map.getBounds(),
 			radius: '1000',
 			keyword: query
 		};
-		this.service.nearbySearch(request, (function (data) {
-			data.forEach((function (item) {
-				var place = new Place(item.name, 
-					item.geometry.location.lat(),
-					item.geometry.location.lng(),
-					item.place_id);
-				places.push(place);
-			}).bind(this));
-			cb();
+		this.service.nearbySearch(request, (function (data, status) {
+			if (status == google.maps.places.PlacesServiceStatus.OK) {
+				data.forEach((function (item) {
+					var place = new Place(item.name, 
+						item.geometry.location.lat(),
+						item.geometry.location.lng(),
+						item.place_id);
+					places.push(place);
+				}).bind(this));
+				cb();				
+			} else {
+				showAlert();
+			}
 		}).bind(this));
 	};
-
-	this.setCenter = function (lat, lng) {
-  		this.map.setCenter({lat: lat, lng: lng});
-  	};
-
 };
 
 var Place = function (name, lat, lng, placeId) {
@@ -187,11 +200,14 @@ var Place = function (name, lat, lng, placeId) {
 		};
 		gapi.service.getDetails(request, (function (result, status) {
 			if (status == google.maps.places.PlacesServiceStatus.OK) {
+				hideAlert();
 				this.website = result.website || "";
 				if (result.photos) {
 					this.picture_url = result.photos[0].getUrl({'maxWidth': 132, 'maxHeight': 96});
-					this.status = result.opening_hours.open_now ? "Open" : "Closed";
+					this.status = (result.opening_hours && result.opening_hours.open_now) ? "Open" : "Closed";
 				}
+			} else {
+				showAlert();
 			}
 		}).bind(this));
 	};
@@ -212,7 +228,9 @@ var Place = function (name, lat, lng, placeId) {
 				this.foursquareHereNow = venue.hereNow.count;
 				this.foursquareCheckinsCount = venue.stats.checkinsCount;	
 			}, this);		
-		}).bind(this));		
+		}).bind(this))
+		.error(showAlert)
+		.success(hideAlert);		
 	};	
 
 	this._getContentString = function () {
@@ -220,7 +238,7 @@ var Place = function (name, lat, lng, placeId) {
 		content += "<img class=\"thumbnail\" src=" + this.picture_url + ">";
 		content += "<p>";
 		if (this.website.length > 0) {
-			content += "<a target=\"_blank\" href=\"" + this.website + "\">Website</a> | "; 
+			content += "<a target=\"_blank\" href=\"" + this.website + "\">Website</a> | h"; 
 		}
 		content += "Status: " + this.status + "</p>";
 		content += "<p>Here now: " + this.foursquareHereNow;
@@ -299,6 +317,9 @@ var ViewModel = function (gapi) {
 	};
 
 	this.loadPlaces = function () {
+		if (!this.gapi.doneLoading) {
+			return;
+		}
 		this.hideAllMarkers();
 		this.places.removeAll();
 		this.gapi.nearbySearch(this.places, this.selectedType(), (function () {
