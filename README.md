@@ -4,4 +4,6 @@ To run the code, you need to obtain Google Maps API and Foursquare API keys. Cop
 
 Then, run a local web server in the root directory of the project (I use `python -m SimpleHTTPServer`) or copy the files to your web server.
 
+A version of this app runs on http://tourplanner.skh.io
+
 
